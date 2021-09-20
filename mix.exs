@@ -31,7 +31,6 @@ defmodule ExDoubleEntry.MixProject do
       {:ecto_sql, "~> 3.7"},
       {:postgrex, ">= 0.0.0", optional: true},
       {:myxql, ">= 0.0.0", optional: true},
-      {:ecto_sqlite3, ">= 0.0.0", optional: true},
       {:ex_machina, "~> 2.7", only: [:test, :test_mysql]},
     ]
   end
@@ -39,7 +38,7 @@ defmodule ExDoubleEntry.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "ecto.setup"],
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.setup": ["ecto.create", "ecto.migrate"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
     ]

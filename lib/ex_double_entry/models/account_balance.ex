@@ -5,7 +5,7 @@ defmodule ExDoubleEntry.AccountBalance do
   alias ExDoubleEntry.{Repo, Account, AccountBalance}
 
   schema "#{ExDoubleEntry.db_table_prefix}account_balances" do
-    field :account, :string
+    field :identifier, :string
     field :currency, Money.Currency.Ecto.Type
     field :scope, :string
     field :balance, :integer
@@ -19,7 +19,7 @@ defmodule ExDoubleEntry.AccountBalance do
 
     from(
       ab in AccountBalance,
-      where: ab.account == ^identifier,
+      where: ab.identifier == ^identifier,
       where: ab.currency == ^currency
     )
     |> scope_cond(account.scope)

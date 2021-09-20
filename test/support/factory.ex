@@ -3,8 +3,8 @@ defmodule ExDoubleEntry.Factory do
 
   def account_balance_factory do
     %ExDoubleEntry.AccountBalance{
-      account: "savings",
-      currency: "USD",
+      identifier: :savings,
+      currency: :USD,
       scope: nil,
       balance: 0,
     }
