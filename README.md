@@ -1,6 +1,6 @@
 # ExDoubleEntry
 
-![Build Status](https://github.com/coinjar/ex_double_entry/actions/workflows/CI/badge.svg)
+[![Build Status](https://github.com/coinjar/ex_double_entry/actions/workflows/ci.yml/badge.svg)](https://github.com/coinjar/ex_double_entry/actions)
 
 An Elixir double-entry library inspired by Ruby's [DoubleEntry](https://github.com/envato/double_entry). Brought to you by [CoinJar](https://coinjar.com).
 
