@@ -2,8 +2,16 @@ name: CI
 on: [push, pull_request]
 jobs:
   build:
-    name: Build and test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - elixir: 1.12.3
+            otp: 24.0
+          - elixir: 1.12.3
+            otp: 23.3
+          - elixir: 1.12.3
+            otp: 22.3
     services:
       postgres:
         image: postgres
@@ -23,8 +31,8 @@ jobs:
     - name: Set up Elixir
       uses: erlef/setup-elixir@885971a72ed1f9240973bd92ab57af8c1aa68f24
       with:
-        elixir-version: '1.12.3'
-        otp-version: '24.0'
+        elixir-version: ${{ matrix.elixir }}
+        otp-version: ${{ matrix.otp }}
     - name: Restore dependencies cache
       uses: actions/cache@v2
       with:
