@@ -8,10 +8,22 @@ jobs:
         include:
           - elixir: 1.12.3
             otp: 24.0
+            env: test
+          - elixir: 1.12.3
+            otp: 24.0
+            env: test_mysql
           - elixir: 1.12.3
             otp: 23.3
+            env: test
+          - elixir: 1.12.3
+            otp: 23.3
+            env: test_mysql
           - elixir: 1.12.3
             otp: 22.3
+            env: test
+          - elixir: 1.12.3
+            otp: 22.3
+            env: test_mysql
     services:
       postgres:
         image: postgres
@@ -26,6 +38,16 @@ jobs:
           --health-retries 5
         ports:
           - 5432:5432
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: ex_double_entry_test
+          MYSQL_USER: root
+          MYSQL_PASSWORD:
+          MYSQL_ROOT_PASSWORD:
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
     - uses: actions/checkout@v2
     - name: Set up Elixir
@@ -42,4 +64,6 @@ jobs:
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests
+      env:
+        MIX_ENV: ${{ matrix.env }}
       run: mix test

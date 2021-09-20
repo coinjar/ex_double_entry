@@ -3,8 +3,10 @@ services:
   ex_double_entry:
     build: .
     environment:
-      POSTGRES_DB: ex_double_entry_test
-      POSTGRES_HOST: postgres
+      POSTGRES_DB_NAME: ex_double_entry_test
+      POSTGRES_DB_HOST: postgres
+    volumes:
+      - ./:/ex_double_entry/
     depends_on:
       - postgres
   postgres:

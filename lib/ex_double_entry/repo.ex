@@ -3,10 +3,8 @@ defmodule ExDoubleEntry.Repo do
 
   @db_adapter (
     case @db do
-      :postgres   -> Ecto.Adapters.Postgres
-      :postgresql -> Ecto.Adapters.Postgres
-      :mysql      -> Ecto.Adapters.MyXQL
-      :sqlite     -> Ecto.Adapters.SQLite3
+      :postgres -> Ecto.Adapters.Postgres
+      :mysql    -> Ecto.Adapters.MyXQL
     end
   )
 
