@@ -5,7 +5,7 @@ config :ex_double_entry,
 
 config :ex_double_entry, ExDoubleEntry.Repo,
   username: System.get_env("MYSQL_DB_USERNAME", "root"),
-  password: System.get_env("MYSQL_DB_PASSWORD", ""),
+  password: System.get_env("MYSQL_DB_PASSWORD", "root"),
   database: System.get_env("MYSQL_DB_NAME", "ex_double_entry_test"),
   hostname: System.get_env("MYSQL_DB_HOST", "localhost"),
   pool: Ecto.Adapters.SQL.Sandbox,
