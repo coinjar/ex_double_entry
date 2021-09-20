@@ -18,7 +18,7 @@ defmodule ExDoubleEntry.Repo.Migrations.ExDoubleEntryMoney do
       timestamps()
     end
 
-    create index(:"#{ExDoubleEntry.db_table_prefix}account_balances", [:scope, :currency, :identifier], unique: true)
+    create index(:"#{ExDoubleEntry.db_table_prefix}account_balances", [:scope, :currency, :identifier], unique: true), name: :scope_currency_identifier_index
 
     create table(:"#{ExDoubleEntry.db_table_prefix}lines") do
       add :account_identifier, :string
@@ -36,7 +36,7 @@ defmodule ExDoubleEntry.Repo.Migrations.ExDoubleEntryMoney do
       timestamps()
     end
 
-    create index(:"#{ExDoubleEntry.db_table_prefix}lines", [:account_identifier, :code, :currency, :inserted_at])
-    create index(:"#{ExDoubleEntry.db_table_prefix}lines", [:account_scope, :account_identifier, :currency, :inserted_at])
+    create index(:"#{ExDoubleEntry.db_table_prefix}lines", [:account_identifier, :code, :currency, :inserted_at]), name: :account_identifier_code_currency_inserted_at_index
+    create index(:"#{ExDoubleEntry.db_table_prefix}lines", [:account_scope, :account_identifier, :currency, :inserted_at]), name: :account_scope_account_identifier_currency_inserted_at_index
   end
 end
