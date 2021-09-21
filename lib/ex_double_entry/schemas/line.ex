@@ -2,17 +2,16 @@ defmodule ExDoubleEntry.Line do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ExDoubleEntry.Repo
-  alias ExDoubleEntry.AccountBalance
+  alias ExDoubleEntry.{Repo, AccountBalance}
 
   schema "#{ExDoubleEntry.db_table_prefix}lines" do
-    field :account_identifier, :string
+    field :account_identifier, ExDoubleEntry.EctoType.Identifier
     field :account_scope, :string
-    field :currency, Money.Currency.Ecto.Type
+    field :currency, ExDoubleEntry.EctoType.Currency
     field :amount, :integer
-    field :balance, :integer
-    field :code, :string
-    field :partner_identifier, :string
+    field :balance_amount, :integer
+    field :code, ExDoubleEntry.EctoType.Identifier
+    field :partner_identifier, ExDoubleEntry.EctoType.Identifier
     field :partner_scope, :string
     field :metadata, :map
 
@@ -27,13 +26,13 @@ defmodule ExDoubleEntry.Line do
     code: code, metadata: metadata
   ) do
     %{
-      account_identifier: "#{account.identifier}",
-      account_scope: "#{account.scope}",
-      currency: "#{money.currency}",
-      code: "#{code}",
+      account_identifier: account.identifier,
+      account_scope: account.scope,
+      currency: money.currency,
+      code: code,
       amount: money.amount,
-      balance: Money.add(account.balance, money).amount,
-      partner_identifier: "#{partner.identifier}",
+      balance_amount: Money.add(account.balance, money).amount,
+      partner_identifier: partner.identifier,
       partner_scope: partner.scope,
       metadata: metadata,
       account_balance_id: account.id,
@@ -45,12 +44,12 @@ defmodule ExDoubleEntry.Line do
   defp changeset(params) do
     %__MODULE__{}
     |> cast(params, [
-        :account_identifier, :account_scope, :currency, :amount, :balance,
+        :account_identifier, :account_scope, :currency, :amount, :balance_amount,
         :code, :partner_identifier, :partner_scope, :metadata,
         :account_balance_id, :partner_line_id,
       ])
     |> validate_required([
-        :account_identifier, :currency, :amount, :balance,
+        :account_identifier, :currency, :amount, :balance_amount,
         :code, :partner_identifier,
       ])
     |> foreign_key_constraint(:partner_line_id)

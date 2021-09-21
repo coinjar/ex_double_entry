@@ -10,7 +10,8 @@ config :ex_double_entry, ExDoubleEntry.Repo,
   hostname: System.get_env("POSTGRES_DB_HOST", "localhost"),
   pool: Ecto.Adapters.SQL.Sandbox,
   show_sensitive_data_on_connection_error: true,
-  queue_target: 20,
+  timeout: :infinity,
+  queue_target: 100,
   queue_interval: 10
 
 config :logger, level: :info

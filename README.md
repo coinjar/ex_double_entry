@@ -53,18 +53,18 @@ config :ex_double_entry,
 ### Accounts & Balances
 
 ```elixir
-:savings
-|> ExDoubleEntry.account(scope: "user/1")
-|> ExDoubleEntry.account_balance()
+account = ExDoubleEntry.account(:savings, scope: "user/1")
+
+account_balance = ExDoubleEntry.account_balance(account)
 ```
 
 ### Transfers
 
 ```elixir
 ExDoubleEntry.transfer(
-  Money.new(100, :USD),
-  from: :savings,
-  to: :checking,
+  money: Money.new(100, :USD),
+  from: account_a,
+  to: account_b,
   code: :deposit
 )
 ```
@@ -72,11 +72,11 @@ ExDoubleEntry.transfer(
 ### Locking
 
 ```elixir
-ExDoubleEntry.lock_accounts(:savings, :checking, fn ->
+ExDoubleEntry.lock_accounts([account_a, account_b], fn ->
   ExDoubleEntry.transfer(
-    Money.new(100, :USD),
-    from: :savings,
-    to: :checking,
+    money: Money.new(100, :USD),
+    from: account_a,
+    to: account_b,
     code: :deposit
   )
 

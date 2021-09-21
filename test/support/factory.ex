@@ -6,7 +6,7 @@ defmodule ExDoubleEntry.Factory do
       identifier: :savings,
       currency: :USD,
       scope: nil,
-      balance: 0,
+      balance_amount: 0,
     }
   end
 end

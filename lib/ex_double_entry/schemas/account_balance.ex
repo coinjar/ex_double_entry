@@ -5,12 +5,26 @@ defmodule ExDoubleEntry.AccountBalance do
   alias ExDoubleEntry.{Repo, Account, AccountBalance}
 
   schema "#{ExDoubleEntry.db_table_prefix}account_balances" do
-    field :identifier, :string
-    field :currency, Money.Currency.Ecto.Type
+    field :identifier, ExDoubleEntry.EctoType.Identifier
+    field :currency, ExDoubleEntry.EctoType.Currency
     field :scope, :string
-    field :balance, :integer
+    field :balance_amount, :integer
 
     timestamps()
+  end
+
+  def create!(
+    %Account{
+      identifier: identifier, scope: scope, currency: currency
+    }
+  ) do
+    %AccountBalance{
+      identifier: identifier,
+      scope: scope,
+      currency: currency,
+      balance_amount: 0,
+    }
+    |> ExDoubleEntry.Repo.insert!()
   end
 
   def for_account(%Account{} = account) do
@@ -18,17 +32,20 @@ defmodule ExDoubleEntry.AccountBalance do
   end
 
   def for_account(%Account{} = account, lock: lock) do
-    identifier = "#{account.identifier}"
-    currency   = "#{account.currency}"
+    identifier = account.identifier
+    currency   = account.currency
 
-    from(
-      ab in AccountBalance,
-      where: ab.identifier == ^identifier,
-      where: ab.currency == ^currency
-    )
-    |> scope_cond(account.scope)
-    |> lock_cond(lock)
-    |> Repo.one()
+    ab =
+      from(
+        ab in AccountBalance,
+        where: ab.identifier == ^identifier,
+        where: ab.currency == ^currency
+      )
+      |> scope_cond(account.scope)
+      |> lock_cond(lock)
+      |> Repo.one()
+
+    ab || create!(account)
   end
 
   defp scope_cond(query, scope) do
@@ -56,10 +73,10 @@ defmodule ExDoubleEntry.AccountBalance do
     end)
   end
 
-  def update_balance!(%Account{} = account, balance) do
+  def update_balance!(%Account{} = account, balance_amount) do
     account
     |> lock!()
-    |> Ecto.Changeset.change(balance: balance)
+    |> Ecto.Changeset.change(balance_amount: balance_amount)
     |> Repo.update!()
   end
 end

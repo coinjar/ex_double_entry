@@ -13,7 +13,7 @@ defmodule ExDoubleEntry.Repo.Migrations.ExDoubleEntryMoney do
       add :identifier, :string
       add :currency, :string
       add :scope, :string
-      add :balance, :bigint
+      add :balance_amount, :bigint
 
       timestamps()
     end
@@ -25,7 +25,7 @@ defmodule ExDoubleEntry.Repo.Migrations.ExDoubleEntryMoney do
       add :account_scope, :string
       add :currency, :string
       add :amount, :bigint
-      add :balance, :bigint
+      add :balance_amount, :bigint
       add :code, :string
       add :partner_identifier, :string
       add :partner_scope, :string

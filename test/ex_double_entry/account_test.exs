@@ -8,14 +8,14 @@ defmodule ExDoubleEntry.AccountTest do
 
     account =
       :account_balance
-      |> insert(identifier: "savings", currency: "USD", scope: "user/1", balance: 42)
+      |> insert(identifier: :savings, currency: :USD, scope: "user/1", balance_amount: 42)
       |> Account.present()
 
     assert %Account{
       identifier: :savings,
       currency: :USD,
       scope: "user/1",
-      positive_only: true,
+      positive_only?: true,
       balance: ^balance
     } = account
   end
