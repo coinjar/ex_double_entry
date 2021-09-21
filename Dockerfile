@@ -8,7 +8,6 @@ RUN set -ex; \
         git \
         mariadb-dev \
         postgresql-dev \
-        sqlite-dev \
         ;
 
 RUN mix local.hex --force && \

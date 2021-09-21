@@ -20,7 +20,6 @@ def deps do
     # pick one DB package
     {:postgrex, ">= 0.0.0"},
     {:myxql, ">= 0.0.0"},
-    {:ecto_sqlite3, ">= 0.0.0"},
   ]
 end
 ```
