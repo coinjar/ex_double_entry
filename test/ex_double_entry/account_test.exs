@@ -33,6 +33,18 @@ defmodule ExDoubleEntry.AccountTest do
       } = Account.lookup(:savings, currency: :USD)
     end
 
+    test "with default currency" do
+      insert(:account_balance, identifier: :savings, currency: :USD, balance_amount: 42)
+
+      balance = Money.new(42, :USD)
+
+      assert %Account{
+        identifier: :savings,
+        currency: :USD,
+        balance: ^balance,
+      } = Account.lookup(:savings)
+    end
+
     test "not found" do
       refute Account.lookup(:savings, currency: :USD)
     end

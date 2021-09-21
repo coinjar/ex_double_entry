@@ -18,7 +18,7 @@ defmodule ExDoubleEntry.Account do
   end
 
   def lookup(identifier, opts \\ []) do
-    opts = [identifier: identifier] ++ opts
+    opts = [identifier: identifier, currency: currency(opts)] ++ opts
 
     Account
     |> struct(opts)
