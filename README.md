@@ -54,16 +54,17 @@ config :ex_double_entry,
 
 ```elixir
 # creates a new account with 0 balance
-account = ExDoubleEntry.make_account(:savings, currency: :USD, scope: "user/1")
+account = ExDoubleEntry.make_account!(:savings, currency: :USD, scope: "user/1")
 
 # looks up an account with its balance
-account = ExDoubleEntry.account_lookup(:savings, currency: :USD, scope: "user/1")
+account = ExDoubleEntry.account_lookup!(:savings, currency: :USD, scope: "user/1")
 ```
 
 ### Transfers
 
 ```elixir
-ExDoubleEntry.transfer(
+# an account will be created if it doesn't already exist
+ExDoubleEntry.transfer!(
   money: Money.new(100, :USD),
   from: account_a,
   to: account_b,
@@ -75,7 +76,7 @@ ExDoubleEntry.transfer(
 
 ```elixir
 ExDoubleEntry.lock_accounts([account_a, account_b], fn ->
-  ExDoubleEntry.transfer(
+  ExDoubleEntry.transfer!(
     money: Money.new(100, :USD),
     from: account_a,
     to: account_b,

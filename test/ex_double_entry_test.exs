@@ -14,7 +14,7 @@ defmodule ExDoubleEntryTest do
     test "successful", %{acc_a: acc_a, acc_b: acc_b} do
       result =
         ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
-          ExDoubleEntry.transfer(
+          ExDoubleEntry.transfer!(
             money: Money.new(100, :USD),
             from: acc_a,
             to: acc_b,
@@ -31,7 +31,7 @@ defmodule ExDoubleEntryTest do
     test "failure", %{acc_a: acc_a, acc_b: acc_b} do
       assert_raise(RuntimeError, fn ->
         ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
-          ExDoubleEntry.transfer(
+          ExDoubleEntry.transfer!(
             money: Money.new(100, :USD),
             from: acc_a,
             to: acc_b,

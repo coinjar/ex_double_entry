@@ -17,7 +17,7 @@ defmodule ExDoubleEntry.Account do
     }
   end
 
-  def lookup(identifier, opts \\ []) do
+  def lookup!(identifier, opts \\ []) do
     opts = [identifier: identifier, currency: currency(opts)] ++ opts
 
     Account

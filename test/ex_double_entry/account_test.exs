@@ -20,7 +20,7 @@ defmodule ExDoubleEntry.AccountTest do
     } = account
   end
 
-  describe "lookup/2" do
+  describe "lookup!/2" do
     test "found" do
       insert(:account_balance, identifier: :savings, currency: :USD, balance_amount: 42)
 
@@ -30,7 +30,7 @@ defmodule ExDoubleEntry.AccountTest do
         identifier: :savings,
         currency: :USD,
         balance: ^balance,
-      } = Account.lookup(:savings, currency: :USD)
+      } = Account.lookup!(:savings, currency: :USD)
     end
 
     test "with default currency" do
@@ -42,11 +42,11 @@ defmodule ExDoubleEntry.AccountTest do
         identifier: :savings,
         currency: :USD,
         balance: ^balance,
-      } = Account.lookup(:savings)
+      } = Account.lookup!(:savings)
     end
 
     test "not found" do
-      refute Account.lookup(:savings, currency: :USD)
+      refute Account.lookup!(:savings, currency: :USD)
     end
   end
 

@@ -6,25 +6,25 @@ defmodule ExDoubleEntry do
   @doc """
   ## Examples
 
-  iex> ExDoubleEntry.make_account(:savings).__struct__
+  iex> ExDoubleEntry.make_account!(:savings).__struct__
   ExDoubleEntry.Account
   """
-  defdelegate make_account(account, opts \\ []),
+  defdelegate make_account!(account, opts \\ []),
     to: ExDoubleEntry.Account, as: :make!
 
   @doc """
   ## Examples
 
-  iex> ExDoubleEntry.account_lookup(:savings, currency: :USD)
+  iex> ExDoubleEntry.account_lookup!(:savings, currency: :USD)
   nil
   """
-  defdelegate account_lookup(identifier, opts \\ []),
-    to: ExDoubleEntry.Account, as: :lookup
+  defdelegate account_lookup!(identifier, opts \\ []),
+    to: ExDoubleEntry.Account, as: :lookup!
 
   @doc """
   ## Examples
 
-  iex> [ExDoubleEntry.make_account(:savings)] |> ExDoubleEntry.lock_accounts(fn -> true end)
+  iex> [ExDoubleEntry.make_account!(:savings)] |> ExDoubleEntry.lock_accounts(fn -> true end)
   {:ok, true}
   """
   defdelegate lock_accounts(accounts, fun),
@@ -39,11 +39,11 @@ defmodule ExDoubleEntry do
   iex>   to: %ExDoubleEntry.Account{identifier: :savings, currency: :USD, balance: Money.new(0, :USD)},
   iex>   code: :deposit
   iex> }
-  iex> |> ExDoubleEntry.transfer()
+  iex> |> ExDoubleEntry.transfer!()
   iex> |> Tuple.to_list()
   iex> |> List.first()
   :ok
   """
-  defdelegate transfer(transfer),
+  defdelegate transfer!(transfer),
     to: ExDoubleEntry.Transfer, as: :perform!
 end
