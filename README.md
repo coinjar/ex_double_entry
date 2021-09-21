@@ -6,6 +6,11 @@ An Elixir double-entry library inspired by Ruby's [DoubleEntry](https://github.c
 
 ![](https://i.imgur.com/QqrlYZ9.png)
 
+## Supported Databases
+
+- Postgres 8.1+
+- MySQL 8.0+
+
 ## Installation
 
 ```elixir
