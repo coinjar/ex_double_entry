@@ -2,7 +2,9 @@ defmodule ExDoubleEntry.Account do
   @enforce_keys [:identifier, :currency]
   defstruct [:id, :identifier, :currency, :scope, :balance, :positive_only]
 
-  def present(%ExDoubleEntry.AccountBalance{} = params) do
+  alias ExDoubleEntry.AccountBalance
+
+  def present(%AccountBalance{} = params) do
     identifier = String.to_atom(params.identifier)
 
     %__MODULE__{
