@@ -53,9 +53,11 @@ config :ex_double_entry,
 ### Accounts & Balances
 
 ```elixir
-account = ExDoubleEntry.account(:savings, scope: "user/1")
+# creates a new account with 0 balance
+account = ExDoubleEntry.make_account(:savings, scope: "user/1")
 
-account_balance = ExDoubleEntry.account_balance(account)
+# looks up an account with its balance
+account = ExDoubleEntry.account_lookup(:savings, scope: "user/1")
 ```
 
 ### Transfers

@@ -2,10 +2,12 @@ defmodule ExDoubleEntry.Account do
   @enforce_keys [:identifier, :currency]
   defstruct [:id, :identifier, :scope, :currency, :balance, :positive_only?]
 
-  alias ExDoubleEntry.AccountBalance
+  alias ExDoubleEntry.{Account, AccountBalance}
+
+  def present(nil), do: nil
 
   def present(%AccountBalance{} = params) do
-    %__MODULE__{
+    %Account{
       id: params.id,
       identifier: params.identifier,
       currency: params.currency,
@@ -15,25 +17,24 @@ defmodule ExDoubleEntry.Account do
     }
   end
 
-  @doc """
-  ## Examples
+  def lookup(identifier, opts \\ []) do
+    opts = [identifier: identifier] ++ opts
 
-  iex> Account.make!(:savings)
-  %Account{identifier: :savings, currency: :USD, scope: nil, positive_only?: true}
+    Account
+    |> struct(opts)
+    |> AccountBalance.find()
+    |> present()
+  end
 
-  iex> Account.make!(:savings, currency: :AUD)
-  %Account{identifier: :savings, currency: :AUD, scope: nil, positive_only?: true}
-
-  iex> Account.make!(:checking, currency: :AUD, scope: "user/1")
-  %Account{identifier: :checking, currency: :AUD, scope: "user/1", positive_only?: false}
-  """
   def make!(identifier, opts \\ []) do
-    %__MODULE__{
+    %Account{
       identifier: identifier,
       currency: currency(opts),
       scope: opts[:scope],
       positive_only?: positive_only?(identifier)
     }
+    |> AccountBalance.create!()
+    |> present()
   end
 
   defp currency(opts) do

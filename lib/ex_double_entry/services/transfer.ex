@@ -20,6 +20,9 @@ defmodule ExDoubleEntry.Transfer do
 
   def perform(%Transfer{money: money, from: from, to: to, code: code, metadata: metadata} = transfer) do
     AccountBalance.lock_multi!([from, to], fn ->
+      AccountBalance.for_account!(from)
+      AccountBalance.for_account!(to)
+
       Line.insert!(Money.neg(money),
         account: from,
         partner: to,

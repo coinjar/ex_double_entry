@@ -2,7 +2,7 @@ defmodule ExDoubleEntry.Line do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ExDoubleEntry.{Repo, AccountBalance}
+  alias ExDoubleEntry.{Repo, AccountBalance, Line}
 
   schema "#{ExDoubleEntry.db_table_prefix}lines" do
     field :account_identifier, ExDoubleEntry.EctoType.Identifier
@@ -15,7 +15,7 @@ defmodule ExDoubleEntry.Line do
     field :partner_scope, :string
     field :metadata, :map
 
-    belongs_to(:partner_line, __MODULE__)
+    belongs_to(:partner_line, Line)
     belongs_to(:account_balance, AccountBalance)
 
     timestamps()
@@ -42,7 +42,7 @@ defmodule ExDoubleEntry.Line do
   end
 
   defp changeset(params) do
-    %__MODULE__{}
+    %Line{}
     |> cast(params, [
         :account_identifier, :account_scope, :currency, :amount, :balance_amount,
         :code, :partner_identifier, :partner_scope, :metadata,

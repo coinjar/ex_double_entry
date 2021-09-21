@@ -29,7 +29,7 @@ defmodule ExDoubleEntry.AccountBalanceTest do
       :ok
     end
 
-    test "existing a" do
+    test "a" do
       ab =
         AccountBalance.for_account(%Account{
           identifier: :savings, currency: :USD, scope: "user/1",
@@ -40,7 +40,7 @@ defmodule ExDoubleEntry.AccountBalanceTest do
       } = ab
     end
 
-    test "existing b" do
+    test "b" do
       ab =
         AccountBalance.for_account(%Account{
           identifier: :savings, currency: :AUD,
@@ -51,7 +51,7 @@ defmodule ExDoubleEntry.AccountBalanceTest do
       } = ab
     end
 
-    test "existing c" do
+    test "c" do
       ab =
         AccountBalance.for_account(%Account{
           identifier: :checking, currency: :AUD,
@@ -61,17 +61,17 @@ defmodule ExDoubleEntry.AccountBalanceTest do
         identifier: :checking, currency: :AUD, scope: nil, balance_amount: 233,
       } = ab
     end
+  end
 
-    test "new" do
-      ab =
-        AccountBalance.for_account(%Account{
-          identifier: :crypto, currency: :BTC,
-        })
+  test "for_account!/1" do
+    ab =
+      AccountBalance.for_account!(%Account{
+        identifier: :crypto, currency: :BTC,
+      })
 
-      assert %AccountBalance{
-        identifier: :crypto, currency: :BTC, scope: nil, balance_amount: 0,
-      } = ab
-    end
+    assert %AccountBalance{
+      identifier: :crypto, currency: :BTC, scope: nil, balance_amount: 0,
+    } = ab
   end
 
   describe "lock_multi!/2" do

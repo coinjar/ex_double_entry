@@ -13,11 +13,11 @@ defmodule ExDoubleEntry.AccountBalance do
     timestamps()
   end
 
-  def create!(
-    %Account{
-      identifier: identifier, scope: scope, currency: currency
-    }
-  ) do
+  def find(%Account{} = account) do
+    for_account(account, lock: false)
+  end
+
+  def create!(%Account{identifier: identifier, scope: scope, currency: currency}) do
     %AccountBalance{
       identifier: identifier,
       scope: scope,
@@ -27,6 +27,16 @@ defmodule ExDoubleEntry.AccountBalance do
     |> ExDoubleEntry.Repo.insert!()
   end
 
+  def for_account!(%Account{} = account) do
+    for_account!(account, lock: false)
+  end
+
+  def for_account!(%Account{} = account, lock: lock) do
+    for_account(account, lock: lock) || create!(account)
+  end
+
+  def for_account(nil), do: nil
+
   def for_account(%Account{} = account) do
     for_account(account, lock: false)
   end
@@ -35,17 +45,14 @@ defmodule ExDoubleEntry.AccountBalance do
     identifier = account.identifier
     currency   = account.currency
 
-    ab =
-      from(
-        ab in AccountBalance,
-        where: ab.identifier == ^identifier,
-        where: ab.currency == ^currency
-      )
-      |> scope_cond(account.scope)
-      |> lock_cond(lock)
-      |> Repo.one()
-
-    ab || create!(account)
+    from(
+      ab in AccountBalance,
+      where: ab.identifier == ^identifier,
+      where: ab.currency == ^currency
+    )
+    |> scope_cond(account.scope)
+    |> lock_cond(lock)
+    |> Repo.one()
   end
 
   defp scope_cond(query, scope) do

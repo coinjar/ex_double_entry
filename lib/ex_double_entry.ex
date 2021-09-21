@@ -6,25 +6,25 @@ defmodule ExDoubleEntry do
   @doc """
   ## Examples
 
-  iex> ExDoubleEntry.account(:savings)
-  %ExDoubleEntry.Account{identifier: :savings, currency: :USD, scope: nil, positive_only?: true}
+  iex> ExDoubleEntry.make_account(:savings).__struct__
+  ExDoubleEntry.Account
   """
-  defdelegate account(account, opts \\ []),
+  defdelegate make_account(account, opts \\ []),
     to: ExDoubleEntry.Account, as: :make!
 
   @doc """
   ## Examples
 
-  iex> (:savings |> ExDoubleEntry.account() |> ExDoubleEntry.account_balance()).__struct__
-  ExDoubleEntry.AccountBalance
+  iex> ExDoubleEntry.account_lookup(:savings, currency: :USD)
+  nil
   """
-  defdelegate account_balance(account),
-    to: ExDoubleEntry.AccountBalance, as: :for_account
+  defdelegate account_lookup(identifier, opts \\ []),
+    to: ExDoubleEntry.Account, as: :lookup
 
   @doc """
   ## Examples
 
-  iex> [ExDoubleEntry.account(:savings)] |> ExDoubleEntry.lock_accounts(fn -> true end)
+  iex> [ExDoubleEntry.make_account(:savings)] |> ExDoubleEntry.lock_accounts(fn -> true end)
   {:ok, true}
   """
   defdelegate lock_accounts(accounts, fun),
