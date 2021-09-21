@@ -155,6 +155,23 @@ defmodule ExDoubleEntry.Guard do
 
   iex> %Transfer{
   iex>   money: Money.new(42, :USD),
+  iex>   from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD)},
+  iex>   to: %Account{identifier: :savings, currency: :USD},
+  iex>   code: :deposit
+  iex> }
+  iex> |> Guard.positive_balance_if_enforced?()
+  {
+    :ok,
+    %Transfer{
+      money: Money.new(42, :USD),
+      code: :deposit,
+      from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD), positive_only?: nil},
+      to: %Account{identifier: :savings, currency: :USD},
+    }
+  }
+
+  iex> %Transfer{
+  iex>   money: Money.new(42, :USD),
   iex>   from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD), positive_only?: true},
   iex>   to: %Account{identifier: :savings, currency: :USD},
   iex>   code: :deposit
@@ -163,7 +180,7 @@ defmodule ExDoubleEntry.Guard do
   {:error, :insufficient_balance, "Transfer amount: 42, :checking balance amount: 10"}
   """
   def positive_balance_if_enforced?(%Transfer{money: money, from: from} = transfer) do
-    if from.positive_only? and Money.cmp(from.balance, money) == :lt do
+    if !! from.positive_only? and Money.cmp(from.balance, money) == :lt do
       {:error, :insufficient_balance, "Transfer amount: #{money.amount}, :#{from.identifier} balance amount: #{from.balance.amount}"}
     else
       {:ok, transfer}

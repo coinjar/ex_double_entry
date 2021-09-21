@@ -45,4 +45,47 @@ defmodule ExDoubleEntryTest do
       assert Line |> Repo.all() |> Enum.count == 0
     end
   end
+
+  describe "no persisted accounts" do
+    setup do
+      acc_a = %Account{identifier: :checking, currency: :USD}
+      acc_b = %Account{identifier: :savings, currency: :USD}
+
+      [acc_a: acc_a, acc_b: acc_b]
+    end
+
+    test "transfer!/1", %{acc_a: acc_a, acc_b: acc_b} do
+      result =
+        ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
+          ExDoubleEntry.transfer!(
+            money: Money.new(100, :USD),
+            from: acc_a,
+            to: acc_b,
+            code: :deposit
+          )
+
+          :diamond_hands
+        end)
+
+      assert result == {:ok, :diamond_hands}
+      assert Line |> Repo.all() |> Enum.count == 2
+    end
+
+    test "transfer/1", %{acc_a: acc_a, acc_b: acc_b} do
+      assert_raise(Account.NotFoundError, fn ->
+        ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
+          ExDoubleEntry.transfer(
+            money: Money.new(100, :USD),
+            from: acc_a,
+            to: acc_b,
+            code: :deposit
+          )
+
+          :diamond_hands
+        end)
+      end)
+
+      assert Line |> Repo.all() |> Enum.count == 0
+    end
+  end
 end

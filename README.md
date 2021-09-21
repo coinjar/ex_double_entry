@@ -63,7 +63,15 @@ account = ExDoubleEntry.account_lookup!(:savings, currency: :USD, scope: "user/1
 ### Transfers
 
 ```elixir
-# an account will be created if it doesn't already exist
+# accounts need to exist otherwise `ExDoubleEntry.Account.NotFoundError` is raised
+ExDoubleEntry.transfer(
+  money: Money.new(100, :USD),
+  from: account_a,
+  to: account_b,
+  code: :deposit
+)
+
+# accounts will be created if they don't exist
 ExDoubleEntry.transfer!(
   money: Money.new(100, :USD),
   from: account_a,

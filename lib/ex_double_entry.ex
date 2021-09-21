@@ -46,4 +46,8 @@ defmodule ExDoubleEntry do
   """
   defdelegate transfer!(transfer),
     to: ExDoubleEntry.Transfer, as: :perform!
+
+  def transfer(transfer) do
+    ExDoubleEntry.Transfer.perform!(transfer, ensure_accounts: false)
+  end
 end

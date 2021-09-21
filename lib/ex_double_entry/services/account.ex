@@ -50,3 +50,7 @@ defmodule ExDoubleEntry.Account do
     !! account_opts[:positive_only]
   end
 end
+
+defmodule ExDoubleEntry.Account.NotFoundError do
+  defexception message: "Account not found."
+end
