@@ -18,4 +18,12 @@ defmodule ExDoubleEntry do
   nil
   """
   defdelegate account_balance(account), to: ExDoubleEntry.AccountBalance, as: :for_account
+
+  @doc """
+  ## Examples
+
+  iex> [ExDoubleEntry.account(:savings)] |> ExDoubleEntry.lock_accounts(fn -> true end)
+  {:ok, true}
+  """
+  defdelegate lock_accounts(accounts, fun), to: ExDoubleEntry.AccountBalance, as: :lock_multi!
 end
