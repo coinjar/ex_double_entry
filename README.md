@@ -31,12 +31,23 @@ config :ex_double_entry,
   db: :postgres,
   db_table_prefix: "ex_double_entry_",
   default_currency: :USD,
+  # all accounts need to be defined here
   accounts: %{
+    # account identifier: account options
+    #
+    # valid options are:
+    #   "positive_only": whether the account can go into negative balance
     bank: [],
     savings: [positive_only: true],
     checking: [],
   },
+  # all transfers need to be defined here
   transfers: %{
+    # transfer code: transfer pairs
+    #
+    # for each transfer pair:
+    #   - the first element is the source account
+    #   - the second element is the destination account
     deposit: [
       {:bank, :savings},
       {:bank, :checking},
@@ -54,13 +65,28 @@ config :ex_double_entry,
 
 ```elixir
 # creates a new account with 0 balance
-account = ExDoubleEntry.make_account!(:savings, currency: :USD, scope: "user/1")
+account =
+  ExDoubleEntry.make_account!(
+    # identifier of the account, in atom
+    :savings,
+    # currency can be any arbitrary atom
+    currency: :USD,
+    # optional, scope can be any arbitrary string
+    scope: "user/1"
+  )
 
 # looks up an account with its balance
-account = ExDoubleEntry.account_lookup!(:savings, currency: :USD, scope: "user/1")
+account =
+  ExDoubleEntry.account_lookup!(
+    :savings,
+    currency: :USD,
+    scope: "user/1"
+  )
 ```
 
 ### Transfers
+
+There are two transfer modes, `transfer` and `transfer!`.
 
 ```elixir
 # accounts need to exist otherwise `ExDoubleEntry.Account.NotFoundError` is raised
@@ -72,6 +98,7 @@ ExDoubleEntry.transfer(
 )
 
 # accounts will be created if they don't exist
+# once accounts are created they will be locked during the transfer
 ExDoubleEntry.transfer!(
   money: Money.new(100, :USD),
   from: account_a,
@@ -81,6 +108,10 @@ ExDoubleEntry.transfer!(
 ```
 
 ### Locking
+
+Transfer itself will already lock the accounts involved. However, if there are
+other tasks that need to be performed atomically with the transfer, you can
+perform them using `lock_accounts`.
 
 ```elixir
 ExDoubleEntry.lock_accounts([account_a, account_b], fn ->
