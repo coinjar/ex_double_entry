@@ -54,6 +54,8 @@ defmodule ExDoubleEntry.TransferTest do
     )
 
     [line1, line2] = Repo.all(Line)
+    [line1_id, line2_id] = [line1.id, line2.id]
+    [acc_a_id, acc_b_id] = [acc_a.id, acc_b.id]
 
     assert %AccountBalance{
       balance_amount: 76_55,
@@ -72,6 +74,8 @@ defmodule ExDoubleEntry.TransferTest do
       code: :deposit,
       partner_identifier: :savings,
       partner_scope: nil,
+      partner_line_id: ^line2_id,
+      account_balance_id: ^acc_a_id,
       metadata: %{"diamond" => "hands"},
     } = line1
 
@@ -84,6 +88,8 @@ defmodule ExDoubleEntry.TransferTest do
       code: :deposit,
       partner_identifier: :checking,
       partner_scope: nil,
+      partner_line_id: ^line1_id,
+      account_balance_id: ^acc_b_id,
       metadata: %{"diamond" => "hands"},
     } = line2
   end

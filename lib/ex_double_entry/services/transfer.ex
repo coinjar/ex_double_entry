@@ -52,19 +52,24 @@ defmodule ExDoubleEntry.Transfer do
     end
 
     AccountBalance.lock_multi!([from, to], fn ->
-      Line.insert!(Money.neg(money),
-        account: from,
-        partner: to,
-        code: code,
-        metadata: metadata
-      )
+      line1 =
+        Line.insert!(Money.neg(money),
+          account: from,
+          partner: to,
+          code: code,
+          metadata: metadata
+        )
 
-      Line.insert!(money,
-        account: to,
-        partner: from,
-        code: code,
-        metadata: metadata
-      )
+      line2 =
+        Line.insert!(money,
+          account: to,
+          partner: from,
+          code: code,
+          metadata: metadata
+        )
+
+      Line.update_partner_line_id!(line1, line2.id)
+      Line.update_partner_line_id!(line2, line1.id)
 
       from_amount = Money.subtract(from.balance, money).amount
       to_amount   = Money.add(to.balance, money).amount

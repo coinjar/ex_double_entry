@@ -41,6 +41,12 @@ defmodule ExDoubleEntry.Line do
     |> Repo.insert!()
   end
 
+  def update_partner_line_id!(%Line{} = line, partner_line_id) do
+    line
+    |> Ecto.Changeset.change(partner_line_id: partner_line_id)
+    |> ExDoubleEntry.Repo.update!()
+  end
+
   defp changeset(params) do
     %Line{}
     |> cast(params, [
