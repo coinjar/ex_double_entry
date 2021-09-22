@@ -8,8 +8,8 @@ An Elixir double-entry library inspired by Ruby's [DoubleEntry](https://github.c
 
 ## Supported Databases
 
-- Postgres 8.1+
-- MySQL 8.0+
+- Postgres 9.4+ (for `JSONB` support)
+- MySQL 8.0+ (for row locking support)
 
 ## Installation
 
