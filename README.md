@@ -24,6 +24,10 @@ def deps do
 end
 ```
 
+### DB Migration
+
+You will need to copy and run the [migration file](priv/repo/migrations/001_ex_double_entry_tables.exs) to create the DB tables.
+
 ## Configuration
 
 ```elixir
