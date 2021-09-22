@@ -88,6 +88,19 @@ account =
   )
 ```
 
+Both functions return an `ExDoubleEntry.Account` struct that looks like this:
+
+```elixir
+%ExDoubleEntry.Account{
+  id: 1,
+  identifier: :savings,
+  currency: :USD,
+  scope: "user/1",
+  positive_only?: true,
+  balance: Money.new(0, :USD),
+}
+```
+
 ### Transfers
 
 There are two transfer modes, `transfer` and `transfer!`.
