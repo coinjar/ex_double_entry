@@ -134,3 +134,7 @@ ExDoubleEntry.lock_accounts([account_a, account_b], fn ->
   # perform other tasks that should be committed atomically with the transfer
 end)
 ```
+
+## License
+
+Licensed under [MIT](LICENSE.md).
