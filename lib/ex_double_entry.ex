@@ -9,16 +9,16 @@ defmodule ExDoubleEntry do
   iex> ExDoubleEntry.make_account!(:savings).__struct__
   ExDoubleEntry.Account
   """
-  defdelegate make_account!(account, opts \\ []),
+  defdelegate make_account!(identifier, opts \\ []),
     to: ExDoubleEntry.Account, as: :make!
 
   @doc """
   ## Examples
 
-  iex> ExDoubleEntry.account_lookup!(:savings, currency: :USD)
+  iex> ExDoubleEntry.lookup_account!(:savings, currency: :USD)
   nil
   """
-  defdelegate account_lookup!(identifier, opts \\ []),
+  defdelegate lookup_account!(identifier, opts \\ []),
     to: ExDoubleEntry.Account, as: :lookup!
 
   @doc """

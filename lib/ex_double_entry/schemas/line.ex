@@ -6,19 +6,34 @@ defmodule ExDoubleEntry.Line do
 
   schema "#{ExDoubleEntry.db_table_prefix}lines" do
     field :account_identifier, ExDoubleEntry.EctoType.Identifier
-    field :account_scope, :string
+    field :account_scope, ExDoubleEntry.EctoType.Scope
     field :currency, ExDoubleEntry.EctoType.Currency
     field :amount, :integer
     field :balance_amount, :integer
     field :code, ExDoubleEntry.EctoType.Identifier
     field :partner_identifier, ExDoubleEntry.EctoType.Identifier
-    field :partner_scope, :string
+    field :partner_scope, ExDoubleEntry.EctoType.Scope
     field :metadata, :map
 
     belongs_to(:partner_line, Line)
     belongs_to(:account_balance, AccountBalance)
 
     timestamps()
+  end
+
+  defp changeset(params) do
+    %Line{}
+    |> cast(params, [
+        :account_identifier, :account_scope, :currency, :amount, :balance_amount,
+        :code, :partner_identifier, :partner_scope, :metadata,
+        :account_balance_id, :partner_line_id,
+      ])
+    |> validate_required([
+        :account_identifier, :currency, :amount, :balance_amount,
+        :code, :partner_identifier,
+      ])
+    |> foreign_key_constraint(:partner_line_id)
+    |> foreign_key_constraint(:account_balance_id)
   end
 
   def insert!(money,
@@ -45,20 +60,5 @@ defmodule ExDoubleEntry.Line do
     line
     |> Ecto.Changeset.change(partner_line_id: partner_line_id)
     |> ExDoubleEntry.Repo.update!()
-  end
-
-  defp changeset(params) do
-    %Line{}
-    |> cast(params, [
-        :account_identifier, :account_scope, :currency, :amount, :balance_amount,
-        :code, :partner_identifier, :partner_scope, :metadata,
-        :account_balance_id, :partner_line_id,
-      ])
-    |> validate_required([
-        :account_identifier, :currency, :amount, :balance_amount,
-        :code, :partner_identifier,
-      ])
-    |> foreign_key_constraint(:partner_line_id)
-    |> foreign_key_constraint(:account_balance_id)
   end
 end

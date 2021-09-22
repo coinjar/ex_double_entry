@@ -14,7 +14,7 @@ defmodule ExDoubleEntry.AccountBalanceTest do
 
     assert %AccountBalance{balance_amount: 0} = AccountBalance.create!(account)
 
-    assert_raise(Ecto.ConstraintError, fn ->
+    assert_raise(Ecto.InvalidChangesetError, fn ->
       AccountBalance.create!(account)
     end)
   end
@@ -63,15 +63,28 @@ defmodule ExDoubleEntry.AccountBalanceTest do
     end
   end
 
-  test "for_account!/1" do
-    ab =
-      AccountBalance.for_account!(%Account{
-        identifier: :crypto, currency: :BTC,
-      })
+  describe "for_account!/1" do
+    test "a" do
+      ab =
+        AccountBalance.for_account!(%Account{
+          identifier: :crypto, currency: :BTC,
+        })
 
-    assert %AccountBalance{
-      identifier: :crypto, currency: :BTC, scope: nil, balance_amount: 0,
-    } = ab
+      assert %AccountBalance{
+        identifier: :crypto, currency: :BTC, scope: nil, balance_amount: 0,
+      } = ab
+    end
+
+    test "b" do
+      ab =
+        AccountBalance.for_account!(%Account{
+          identifier: :crypto, currency: :BTC, scope: ""
+        })
+
+      assert %AccountBalance{
+        identifier: :crypto, currency: :BTC, scope: nil, balance_amount: 0,
+      } = ab
+    end
   end
 
   describe "lock_multi!/2" do

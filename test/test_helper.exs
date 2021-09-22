@@ -1,5 +1,5 @@
 {:ok, _} = Application.ensure_all_started(:ex_machina)
-ExUnit.start()
+ExUnit.start(timeout: 300_000)
 Ecto.Adapters.SQL.Sandbox.mode(ExDoubleEntry.Repo, :manual)
 
 require Logger

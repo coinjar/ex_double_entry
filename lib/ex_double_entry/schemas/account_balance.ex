@@ -1,30 +1,38 @@
 defmodule ExDoubleEntry.AccountBalance do
   use Ecto.Schema
-  import Ecto.Query
+  import Ecto.{Changeset, Query}
 
   alias ExDoubleEntry.{Repo, Account, AccountBalance}
 
   schema "#{ExDoubleEntry.db_table_prefix}account_balances" do
     field :identifier, ExDoubleEntry.EctoType.Identifier
     field :currency, ExDoubleEntry.EctoType.Currency
-    field :scope, :string
+    field :scope, ExDoubleEntry.EctoType.Scope
     field :balance_amount, :integer
 
     timestamps()
+  end
+
+  defp changeset(params) do
+    %AccountBalance{}
+    |> cast(params, [:identifier, :currency, :scope, :balance_amount])
+    |> validate_required([:identifier, :currency, :balance_amount])
+    |> unique_constraint(:identifier, name: :scope_currency_identifier_index)
   end
 
   def find(%Account{} = account) do
     for_account(account, lock: false)
   end
 
-  def create!(%Account{identifier: identifier, scope: scope, currency: currency}) do
-    %AccountBalance{
+  def create!(%Account{identifier: identifier, currency: currency, scope: scope}) do
+    %{
       identifier: identifier,
-      scope: scope,
       currency: currency,
+      scope: scope,
       balance_amount: 0,
     }
-    |> ExDoubleEntry.Repo.insert!()
+    |> changeset()
+    |> Repo.insert!()
   end
 
   def for_account!(%Account{} = account) do
@@ -41,23 +49,23 @@ defmodule ExDoubleEntry.AccountBalance do
     for_account(account, lock: false)
   end
 
-  def for_account(%Account{} = account, lock: lock) do
-    identifier = account.identifier
-    currency   = account.currency
-
+  def for_account(
+    %Account{identifier: identifier, currency: currency, scope: scope},
+    lock: lock
+  ) do
     from(
       ab in AccountBalance,
       where: ab.identifier == ^identifier,
       where: ab.currency == ^currency
     )
-    |> scope_cond(account.scope)
+    |> scope_cond(scope)
     |> lock_cond(lock)
     |> Repo.one()
   end
 
   defp scope_cond(query, scope) do
     case scope do
-      nil -> where(query, [ab], is_nil(ab.scope))
+      nil -> where(query, [ab], ab.scope == "")
       _   -> where(query, [ab], ab.scope == ^scope)
     end
   end

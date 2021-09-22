@@ -75,11 +75,14 @@ ExDoubleEntry.make_account!(
   # currency can be any arbitrary atom
   currency: :USD,
   # optional, scope can be any arbitrary string
+  #
+  # due to DB index on `NULL` values, scope value `nil` and `""` (empty string)
+  # are treated as the same
   scope: "user/1"
 )
 
 # looks up an account with its balance
-ExDoubleEntry.account_lookup!(
+ExDoubleEntry.lookup_account!(
   :savings,
   currency: :USD,
   scope: "user/1"

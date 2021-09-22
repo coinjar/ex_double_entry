@@ -81,6 +81,8 @@ defmodule ExDoubleEntry.Transfer do
         raise Account.NotFoundError
       is_nil(AccountBalance.for_account(acc_b)) ->
         raise Account.NotFoundError
+      true ->
+        {acc_a, acc_b}
     end
   end
 end
