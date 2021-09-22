@@ -36,20 +36,7 @@ defmodule ExDoubleEntry.Transfer do
     } = transfer,
     ensure_accounts: ensure_accounts
   ) do
-    {from, to} =
-      if ensure_accounts == true do
-        {
-          from |> AccountBalance.for_account!() |> Account.present(),
-          to |> AccountBalance.for_account!() |> Account.present(),
-        }
-      else
-        cond do
-          is_nil(AccountBalance.for_account(from)) ->
-            raise Account.NotFoundError
-          is_nil(AccountBalance.for_account(to)) ->
-            raise Account.NotFoundError
-        end
-    end
+    {from, to} = ensure_accounts_if_needed(ensure_accounts, from, to)
 
     AccountBalance.lock_multi!([from, to], fn ->
       line1 =
@@ -79,5 +66,21 @@ defmodule ExDoubleEntry.Transfer do
 
       transfer
     end)
+  end
+
+  defp ensure_accounts_if_needed(ensure?, acc_a, acc_b) do
+    if ensure? == true do
+      {
+        acc_a |> AccountBalance.for_account!() |> Account.present(),
+        acc_b |> AccountBalance.for_account!() |> Account.present(),
+      }
+    else
+      cond do
+        is_nil(AccountBalance.for_account(acc_a)) ->
+          raise Account.NotFoundError
+        is_nil(AccountBalance.for_account(acc_b)) ->
+          raise Account.NotFoundError
+      end
+    end
   end
 end
