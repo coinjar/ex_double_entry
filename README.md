@@ -69,23 +69,21 @@ config :ex_double_entry,
 
 ```elixir
 # creates a new account with 0 balance
-account =
-  ExDoubleEntry.make_account!(
-    # identifier of the account, in atom
-    :savings,
-    # currency can be any arbitrary atom
-    currency: :USD,
-    # optional, scope can be any arbitrary string
-    scope: "user/1"
-  )
+ExDoubleEntry.make_account!(
+  # identifier of the account, in atom
+  :savings,
+  # currency can be any arbitrary atom
+  currency: :USD,
+  # optional, scope can be any arbitrary string
+  scope: "user/1"
+)
 
 # looks up an account with its balance
-account =
-  ExDoubleEntry.account_lookup!(
-    :savings,
-    currency: :USD,
-    scope: "user/1"
-  )
+ExDoubleEntry.account_lookup!(
+  :savings,
+  currency: :USD,
+  scope: "user/1"
+)
 ```
 
 Both functions return an `ExDoubleEntry.Account` struct that looks like this:
@@ -138,6 +136,11 @@ ExDoubleEntry.transfer!(
 Transfer itself will already lock the accounts involved. However, if there are
 other tasks that need to be performed atomically with the transfer, you can
 perform them using `lock_accounts`.
+
+Transactions can be nested arbitrarily, since in Ecto, transactions are
+flattened and are committed or rolled back based on the outer most transaction.
+
+Read more on Ecto's transaction handling [here](https://hexdocs.pm/ecto/Ecto.Repo.html#c:transaction/2).
 
 ```elixir
 ExDoubleEntry.lock_accounts([account_a, account_b], fn ->
