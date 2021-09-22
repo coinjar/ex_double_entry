@@ -88,19 +88,28 @@ account =
 
 There are two transfer modes, `transfer` and `transfer!`.
 
+Note: ExDoubleEntry relies on the [money](https://github.com/elixirmoney/money)
+library for balances and amounts.
+
 ```elixir
-# accounts need to exist otherwise `ExDoubleEntry.Account.NotFoundError` is raised
+# accounts need to exist in the DB otherwise
+# `ExDoubleEntry.Account.NotFoundError` is raised
 ExDoubleEntry.transfer(
-  money: Money.new(100, :USD),
+  money: Money.new(100_00, :USD),
+  # accounts need to be defined in the config
   from: account_a,
   to: account_b,
-  code: :deposit
+  # transfer code is required, and must be defined in the config
+  code: :deposit,
+  # optional, metadata can be any arbitrary map, it gets stored in the DB
+  # as either a JSON string (MySQL) or a JSONB object (Postgres)
+  metadata: %{diamond: "hands"}
 )
 
-# accounts will be created if they don't exist
+# accounts will be created in the DB if they don't exist
 # once accounts are created they will be locked during the transfer
 ExDoubleEntry.transfer!(
-  money: Money.new(100, :USD),
+  money: Money.new(100_00, :USD),
   from: account_a,
   to: account_b,
   code: :deposit
