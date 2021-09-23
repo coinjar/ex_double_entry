@@ -45,7 +45,7 @@ defmodule ExDoubleEntryStressTest do
               acc_a_identifier = :"acc-#{n}-a"
               acc_b_identifier = :"acc-#{n}-b"
 
-              scope = "scope-#{n}"
+              scope = Enum.random([nil, "scope-#{n}"])
 
               acc_a =
                 try do
@@ -78,16 +78,29 @@ defmodule ExDoubleEntryStressTest do
                       amount_a = -amount
                       amount_b = amount
 
+                      scope_cond =
+                        fn query, value ->
+                          case value do
+                            nil ->
+                              query
+                              |> where([q], is_nil(q.account_scope))
+                              |> where([q], is_nil(q.partner_scope))
+                            _   ->
+                              query
+                              |> where([q], q.account_scope == ^value)
+                              |> where([q], q.partner_scope == ^value)
+                          end
+                        end
+
                       lines_a =
                         from(
                           l in Line,
                           where: l.account_identifier == ^acc_a_identifier,
                           where: l.partner_identifier == ^acc_b_identifier,
-                          where: l.account_scope == ^scope,
-                          where: l.partner_scope == ^scope,
                           where: l.code == :stress_test,
                           order_by: [desc: l.balance_amount],
                         )
+                        |> scope_cond.(scope)
                         |> Repo.all()
 
                       lines_b =
@@ -95,11 +108,10 @@ defmodule ExDoubleEntryStressTest do
                           l in Line,
                           where: l.account_identifier == ^acc_b_identifier,
                           where: l.partner_identifier == ^acc_a_identifier,
-                          where: l.account_scope == ^scope,
-                          where: l.partner_scope == ^scope,
                           where: l.code == :stress_test,
                           order_by: [asc: l.balance_amount],
                         )
+                        |> scope_cond.(scope)
                         |> Repo.all()
 
                       {lines_a_amount, lines_a_balance_amount} =
