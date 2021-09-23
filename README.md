@@ -76,8 +76,8 @@ ExDoubleEntry.make_account!(
   currency: :USD,
   # optional, scope can be any arbitrary string
   #
-  # due to DB index on `NULL` values, scope value `nil` and `""` (empty string)
-  # are treated as the same
+  # due to DB index on `NULL` values, scope value can only be `nil` (stored as
+  # an empty string in the DB) or non-empty strings
   scope: "user/1"
 )
 

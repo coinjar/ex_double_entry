@@ -9,6 +9,7 @@ if Code.ensure_loaded?(Ecto.Type) do
     def type, do: :string
 
     def cast(nil), do: {:ok, ""}
+    def cast(""), do: raise ExDoubleEntry.Account.InvalidScopeError
     def cast(atom) when is_atom(atom), do: {:ok, Atom.to_string(atom)}
     def cast(str) when is_binary(str), do: {:ok, str}
     def cast(_), do: :error

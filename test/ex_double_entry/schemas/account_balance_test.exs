@@ -76,14 +76,11 @@ defmodule ExDoubleEntry.AccountBalanceTest do
     end
 
     test "b" do
-      ab =
+      assert_raise(Account.InvalidScopeError, fn ->
         AccountBalance.for_account!(%Account{
           identifier: :crypto, currency: :BTC, scope: ""
         })
-
-      assert %AccountBalance{
-        identifier: :crypto, currency: :BTC, scope: nil, balance_amount: 0,
-      } = ab
+      end)
     end
   end
 

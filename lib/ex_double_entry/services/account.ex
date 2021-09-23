@@ -54,3 +54,7 @@ end
 defmodule ExDoubleEntry.Account.NotFoundError do
   defexception message: "Account not found."
 end
+
+defmodule ExDoubleEntry.Account.InvalidScopeError do
+  defexception message: "Invalid scope: empty string not allowed."
+end
