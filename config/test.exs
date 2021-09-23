@@ -11,7 +11,7 @@ config :ex_double_entry, ExDoubleEntry.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   show_sensitive_data_on_connection_error: true,
   timeout: :infinity,
-  queue_target: 100,
+  queue_target: 200,
   queue_interval: 10
 
 config :logger, level: :info

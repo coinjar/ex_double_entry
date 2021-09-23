@@ -107,7 +107,7 @@ defmodule ExDoubleEntry.AccountBalanceTest do
     test "failed locks", %{acc_a: acc_a, acc_b: acc_b} do
       [
         Task.async(fn ->
-          AccountBalance.lock_multi!([acc_a, acc_b], fn -> :timer.sleep(250) end)
+          AccountBalance.lock_multi!([acc_a, acc_b], fn -> :timer.sleep(500) end)
         end),
         Task.async(fn ->
           assert_raise(DBConnection.ConnectionError, fn ->
