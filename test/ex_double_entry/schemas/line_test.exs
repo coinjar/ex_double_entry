@@ -12,19 +12,21 @@ defmodule ExDoubleEntry.LineTest do
     line =
       Line.insert!(
         Money.new(100, :USD),
-        account: acc_a, partner: acc_b,
-        code: :deposit, metadata: %{diamond: "hands"}
+        account: acc_a,
+        partner: acc_b,
+        code: :deposit,
+        metadata: %{diamond: "hands"}
       )
 
     assert %Line{
-      account_identifier: :checking,
-      currency: :USD,
-      code: :deposit,
-      amount: 100,
-      balance_amount: 100,
-      partner_identifier: :savings,
-      metadata: %{diamond: "hands"},
-      account_balance_id: ^acc_a_id,
-    } = line
+             account_identifier: :checking,
+             currency: :USD,
+             code: :deposit,
+             amount: 100,
+             balance_amount: 100,
+             partner_identifier: :savings,
+             metadata: %{diamond: "hands"},
+             account_balance_id: ^acc_a_id
+           } = line
   end
 end

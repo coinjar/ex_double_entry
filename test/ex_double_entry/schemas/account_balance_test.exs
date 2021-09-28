@@ -4,13 +4,12 @@ defmodule ExDoubleEntry.AccountBalanceTest do
   doctest AccountBalance
 
   test "create!/1 - balance will always be 0" do
-    account =
-      %Account{
-        identifier: :savings,
-        scope: "user/1",
-        currency: :USD,
-        balance: Money.new(42, :USD)
-      }
+    account = %Account{
+      identifier: :savings,
+      scope: "user/1",
+      currency: :USD,
+      balance: Money.new(42, :USD)
+    }
 
     assert %AccountBalance{balance_amount: 0} = AccountBalance.create!(account)
 
@@ -21,7 +20,13 @@ defmodule ExDoubleEntry.AccountBalanceTest do
 
   describe "for_account/1" do
     setup do
-      insert(:account_balance, identifier: :savings, currency: :USD, scope: "user/1", balance_amount: 42)
+      insert(:account_balance,
+        identifier: :savings,
+        currency: :USD,
+        scope: "user/1",
+        balance_amount: 42
+      )
+
       insert(:account_balance, identifier: :savings, currency: :USD, balance_amount: 24)
       insert(:account_balance, identifier: :savings, currency: :AUD, balance_amount: 1337)
       insert(:account_balance, identifier: :checking, currency: :AUD, balance_amount: 233)
@@ -32,34 +37,47 @@ defmodule ExDoubleEntry.AccountBalanceTest do
     test "a" do
       ab =
         AccountBalance.for_account(%Account{
-          identifier: :savings, currency: :USD, scope: "user/1",
+          identifier: :savings,
+          currency: :USD,
+          scope: "user/1"
         })
 
       assert %AccountBalance{
-        identifier: :savings, currency: :USD, scope: "user/1", balance_amount: 42,
-      } = ab
+               identifier: :savings,
+               currency: :USD,
+               scope: "user/1",
+               balance_amount: 42
+             } = ab
     end
 
     test "b" do
       ab =
         AccountBalance.for_account(%Account{
-          identifier: :savings, currency: :AUD,
+          identifier: :savings,
+          currency: :AUD
         })
 
       assert %AccountBalance{
-        identifier: :savings, currency: :AUD, scope: nil, balance_amount: 1337,
-      } = ab
+               identifier: :savings,
+               currency: :AUD,
+               scope: nil,
+               balance_amount: 1337
+             } = ab
     end
 
     test "c" do
       ab =
         AccountBalance.for_account(%Account{
-          identifier: :checking, currency: :AUD,
+          identifier: :checking,
+          currency: :AUD
         })
 
       assert %AccountBalance{
-        identifier: :checking, currency: :AUD, scope: nil, balance_amount: 233,
-      } = ab
+               identifier: :checking,
+               currency: :AUD,
+               scope: nil,
+               balance_amount: 233
+             } = ab
     end
   end
 
@@ -67,18 +85,24 @@ defmodule ExDoubleEntry.AccountBalanceTest do
     test "a" do
       ab =
         AccountBalance.for_account!(%Account{
-          identifier: :crypto, currency: :BTC,
+          identifier: :crypto,
+          currency: :BTC
         })
 
       assert %AccountBalance{
-        identifier: :crypto, currency: :BTC, scope: nil, balance_amount: 0,
-      } = ab
+               identifier: :crypto,
+               currency: :BTC,
+               scope: nil,
+               balance_amount: 0
+             } = ab
     end
 
     test "b" do
       assert_raise(Account.InvalidScopeError, fn ->
         AccountBalance.for_account!(%Account{
-          identifier: :crypto, currency: :BTC, scope: ""
+          identifier: :crypto,
+          currency: :BTC,
+          scope: ""
         })
       end)
     end
@@ -112,16 +136,16 @@ defmodule ExDoubleEntry.AccountBalanceTest do
         Task.async(fn ->
           assert_raise(DBConnection.ConnectionError, fn ->
             AccountBalance.lock_multi!([acc_a, acc_b], fn ->
-              Transfer.perform(
-                %Transfer{
-                  money: Money.new(42, :USD),
-                  from: acc_a, to: acc_b,
-                  code: :deposit, metadata: nil,
-                }
-              )
+              Transfer.perform(%Transfer{
+                money: Money.new(42, :USD),
+                from: acc_a,
+                to: acc_b,
+                code: :deposit,
+                metadata: nil
+              })
             end)
           end)
-        end),
+        end)
       ]
       |> Task.await_many()
     end

@@ -47,7 +47,7 @@ defmodule ExDoubleEntry.Account do
       |> Application.fetch_env!(:accounts)
       |> Map.fetch!(identifier)
 
-    !! account_opts[:positive_only]
+    !!account_opts[:positive_only]
   end
 end
 

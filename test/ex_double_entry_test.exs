@@ -25,7 +25,7 @@ defmodule ExDoubleEntryTest do
         end)
 
       assert result == {:ok, :diamond_hands}
-      assert Line |> Repo.all() |> Enum.count == 2
+      assert Line |> Repo.all() |> Enum.count() == 2
     end
 
     test "failure", %{acc_a: acc_a, acc_b: acc_b} do
@@ -42,7 +42,7 @@ defmodule ExDoubleEntryTest do
         end)
       end)
 
-      assert Line |> Repo.all() |> Enum.count == 0
+      assert Line |> Repo.all() |> Enum.count() == 0
     end
   end
 
@@ -68,7 +68,7 @@ defmodule ExDoubleEntryTest do
         end)
 
       assert result == {:ok, :diamond_hands}
-      assert Line |> Repo.all() |> Enum.count == 2
+      assert Line |> Repo.all() |> Enum.count() == 2
     end
 
     test "transfer/1", %{acc_a: acc_a, acc_b: acc_b} do
@@ -85,7 +85,7 @@ defmodule ExDoubleEntryTest do
         end)
       end)
 
-      assert Line |> Repo.all() |> Enum.count == 0
+      assert Line |> Repo.all() |> Enum.count() == 0
     end
   end
 end

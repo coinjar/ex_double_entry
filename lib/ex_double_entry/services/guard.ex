@@ -14,7 +14,7 @@ defmodule ExDoubleEntry.Guard do
   """
   def positive_amount?(%Transfer{money: money} = transfer) do
     case Money.positive?(money) do
-      true  -> {:ok, transfer}
+      true -> {:ok, transfer}
       false -> {:error, :positive_amount_only, ""}
     end
   end
@@ -58,15 +58,19 @@ defmodule ExDoubleEntry.Guard do
   {:error, :undefined_transfer_pair, "Transfer pair :checking -> :savings does not exist for code withdraw."}
   """
   def valid_definition?(%Transfer{from: from, to: to, code: code} = transfer) do
-    with {:ok, pairs} <- :ex_double_entry
-                      |> Application.fetch_env!(:transfers)
-                      |> Map.fetch(code),
-         true <- Enum.member?(pairs, {from.identifier, to.identifier})
-    do
+    with {:ok, pairs} <-
+           :ex_double_entry
+           |> Application.fetch_env!(:transfers)
+           |> Map.fetch(code),
+         true <- Enum.member?(pairs, {from.identifier, to.identifier}) do
       {:ok, transfer}
     else
-      :error -> {:error, :undefined_transfer_code, "Transfer code :#{code} is undefined."}
-      false  -> {:error, :undefined_transfer_pair, "Transfer pair :#{from.identifier} -> :#{to.identifier} does not exist for code #{code}."}
+      :error ->
+        {:error, :undefined_transfer_code, "Transfer code :#{code} is undefined."}
+
+      false ->
+        {:error, :undefined_transfer_pair,
+         "Transfer pair :#{from.identifier} -> :#{to.identifier} does not exist for code #{code}."}
     end
   end
 
@@ -112,7 +116,8 @@ defmodule ExDoubleEntry.Guard do
     if from.currency == money.currency and to.currency == money.currency do
       {:ok, transfer}
     else
-      {:error, :mismatched_currencies, "Attempted to transfer :#{money.currency} from :#{from.identifier} in :#{from.currency} to :#{to.identifier} in :#{to.currency}."}
+      {:error, :mismatched_currencies,
+       "Attempted to transfer :#{money.currency} from :#{from.identifier} in :#{from.currency} to :#{to.identifier} in :#{to.currency}."}
     end
   end
 
@@ -180,8 +185,9 @@ defmodule ExDoubleEntry.Guard do
   {:error, :insufficient_balance, "Transfer amount: 42, :checking balance amount: 10"}
   """
   def positive_balance_if_enforced?(%Transfer{money: money, from: from} = transfer) do
-    if !! from.positive_only? and Money.cmp(from.balance, money) == :lt do
-      {:error, :insufficient_balance, "Transfer amount: #{money.amount}, :#{from.identifier} balance amount: #{from.balance.amount}"}
+    if !!from.positive_only? and Money.cmp(from.balance, money) == :lt do
+      {:error, :insufficient_balance,
+       "Transfer amount: #{money.amount}, :#{from.identifier} balance amount: #{from.balance.amount}"}
     else
       {:ok, transfer}
     end

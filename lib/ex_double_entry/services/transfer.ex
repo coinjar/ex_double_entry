@@ -16,8 +16,7 @@ defmodule ExDoubleEntry.Transfer do
     with {:ok, _} <- Guard.positive_amount?(transfer),
          {:ok, _} <- Guard.valid_definition?(transfer),
          {:ok, _} <- Guard.matching_currency?(transfer),
-         {:ok, _} <- Guard.positive_balance_if_enforced?(transfer)
-    do
+         {:ok, _} <- Guard.positive_balance_if_enforced?(transfer) do
       perform(transfer, ensure_accounts: ensure_accounts)
     end
   end
@@ -31,11 +30,15 @@ defmodule ExDoubleEntry.Transfer do
   end
 
   def perform(
-    %Transfer{
-      money: money, from: from, to: to, code: code, metadata: metadata
-    } = transfer,
-    ensure_accounts: ensure_accounts
-  ) do
+        %Transfer{
+          money: money,
+          from: from,
+          to: to,
+          code: code,
+          metadata: metadata
+        } = transfer,
+        ensure_accounts: ensure_accounts
+      ) do
     {from, to} = ensure_accounts_if_needed(ensure_accounts, from, to)
 
     AccountBalance.lock_multi!([from, to], fn ->
@@ -59,7 +62,7 @@ defmodule ExDoubleEntry.Transfer do
       Line.update_partner_line_id!(line2, line1.id)
 
       from_amount = Money.subtract(from.balance, money).amount
-      to_amount   = Money.add(to.balance, money).amount
+      to_amount = Money.add(to.balance, money).amount
 
       AccountBalance.update_balance!(from, from_amount)
       AccountBalance.update_balance!(to, to_amount)
@@ -71,7 +74,7 @@ defmodule ExDoubleEntry.Transfer do
   defp ensure_accounts_if_needed(true, acc_a, acc_b) do
     {
       acc_a |> AccountBalance.for_account!() |> Account.present(),
-      acc_b |> AccountBalance.for_account!() |> Account.present(),
+      acc_b |> AccountBalance.for_account!() |> Account.present()
     }
   end
 
@@ -79,8 +82,10 @@ defmodule ExDoubleEntry.Transfer do
     cond do
       is_nil(AccountBalance.for_account(acc_a)) ->
         raise Account.NotFoundError
+
       is_nil(AccountBalance.for_account(acc_b)) ->
         raise Account.NotFoundError
+
       true ->
         {acc_a, acc_b}
     end

@@ -8,18 +8,18 @@ config :ex_double_entry,
   accounts: %{
     bank: [],
     savings: [positive_only: true],
-    checking: [],
+    checking: []
   },
   transfers: %{
     deposit: [
       {:bank, :savings},
       {:bank, :checking},
-      {:checking, :savings},
+      {:checking, :savings}
     ],
     withdraw: [
-      {:savings, :checking},
+      {:savings, :checking}
     ],
-    stress_test: [],
+    stress_test: []
   }
 
 import_config "#{config_env()}.exs"

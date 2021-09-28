@@ -16,7 +16,7 @@ defmodule ExDoubleEntry.MixProject do
   def application do
     [
       mod: {ExDoubleEntry.Application, []},
-      extra_applications: [:logger, :runtime_tools],
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
@@ -31,7 +31,7 @@ defmodule ExDoubleEntry.MixProject do
       {:ecto_sql, "~> 3.7"},
       {:postgrex, ">= 0.0.0", optional: true},
       {:myxql, ">= 0.0.0", optional: true},
-      {:ex_machina, "~> 2.7", only: [:test, :test_mysql]},
+      {:ex_machina, "~> 2.7", only: [:test, :test_mysql]}
     ]
   end
 

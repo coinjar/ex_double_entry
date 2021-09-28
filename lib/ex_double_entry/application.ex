@@ -4,7 +4,7 @@ defmodule ExDoubleEntry.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      ExDoubleEntry.Repo,
+      ExDoubleEntry.Repo
     ]
 
     opts = [strategy: :one_for_one, name: ExDoubleEntry.Supervisor]

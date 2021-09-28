@@ -13,18 +13,18 @@ defmodule ExDoubleEntryStressTest do
     transfers_config = Application.fetch_env!(:ex_double_entry, :transfers)
 
     {new_accounts_config, new_transfer_config} =
-      Enum.reduce(1..@account_pairs_per_process, {accounts_config, transfers_config}, fn n, {ac, tc} ->
+      Enum.reduce(1..@account_pairs_per_process, {accounts_config, transfers_config}, fn n,
+                                                                                         {ac, tc} ->
         acc_a_identifier = :"acc-#{n}-a"
         acc_b_identifier = :"acc-#{n}-b"
 
         merged_accounts_config =
           Map.merge(ac, %{
             acc_a_identifier => [],
-            acc_b_identifier => [],
+            acc_b_identifier => []
           })
 
-        transfers_config_items =
-          tc[:stress_test] ++ [{acc_a_identifier, acc_b_identifier}]
+        transfers_config_items = tc[:stress_test] ++ [{acc_a_identifier, acc_b_identifier}]
 
         merged_transfers_config =
           Map.merge(tc, %{
@@ -72,25 +72,25 @@ defmodule ExDoubleEntryStressTest do
                           money: Money.new(amount, :USD),
                           from: acc_a,
                           to: acc_b,
-                          code: :stress_test,
+                          code: :stress_test
                         )
 
                       amount_a = -amount
                       amount_b = amount
 
-                      scope_cond =
-                        fn query, value ->
-                          case value do
-                            nil ->
-                              query
-                              |> where([q], is_nil(q.account_scope))
-                              |> where([q], is_nil(q.partner_scope))
-                            _   ->
-                              query
-                              |> where([q], q.account_scope == ^value)
-                              |> where([q], q.partner_scope == ^value)
-                          end
+                      scope_cond = fn query, value ->
+                        case value do
+                          nil ->
+                            query
+                            |> where([q], is_nil(q.account_scope))
+                            |> where([q], is_nil(q.partner_scope))
+
+                          _ ->
+                            query
+                            |> where([q], q.account_scope == ^value)
+                            |> where([q], q.partner_scope == ^value)
                         end
+                      end
 
                       lines_a =
                         from(
@@ -98,7 +98,7 @@ defmodule ExDoubleEntryStressTest do
                           where: l.account_identifier == ^acc_a_identifier,
                           where: l.partner_identifier == ^acc_b_identifier,
                           where: l.code == :stress_test,
-                          order_by: [desc: l.balance_amount],
+                          order_by: [desc: l.balance_amount]
                         )
                         |> scope_cond.(scope)
                         |> Repo.all()
@@ -109,7 +109,7 @@ defmodule ExDoubleEntryStressTest do
                           where: l.account_identifier == ^acc_b_identifier,
                           where: l.partner_identifier == ^acc_a_identifier,
                           where: l.code == :stress_test,
-                          order_by: [asc: l.balance_amount],
+                          order_by: [asc: l.balance_amount]
                         )
                         |> scope_cond.(scope)
                         |> Repo.all()
@@ -136,7 +136,7 @@ defmodule ExDoubleEntryStressTest do
                   {amount_a, amount_b}
                 end)
 
-              IO.write "."
+              IO.write(".")
 
               {aa + amount_aa, bb + amount_bb}
             end)
@@ -147,7 +147,7 @@ defmodule ExDoubleEntryStressTest do
 
     Task.await_many(tasks, :infinity)
 
-    assert Line |> Repo.all() |> Enum.count()
-      == @processes * @account_pairs_per_process * @transfers_per_account * 2
+    assert Line |> Repo.all() |> Enum.count() ==
+             @processes * @account_pairs_per_process * @transfers_per_account * 2
   end
 end

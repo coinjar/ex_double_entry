@@ -12,12 +12,12 @@ defmodule ExDoubleEntry.AccountTest do
       |> Account.present()
 
     assert %Account{
-      identifier: :savings,
-      currency: :USD,
-      scope: "user/1",
-      positive_only?: true,
-      balance: ^balance
-    } = account
+             identifier: :savings,
+             currency: :USD,
+             scope: "user/1",
+             positive_only?: true,
+             balance: ^balance
+           } = account
   end
 
   describe "lookup!/2" do
@@ -27,10 +27,10 @@ defmodule ExDoubleEntry.AccountTest do
       balance = Money.new(42, :USD)
 
       assert %Account{
-        identifier: :savings,
-        currency: :USD,
-        balance: ^balance,
-      } = Account.lookup!(:savings, currency: :USD)
+               identifier: :savings,
+               currency: :USD,
+               balance: ^balance
+             } = Account.lookup!(:savings, currency: :USD)
     end
 
     test "with default currency" do
@@ -39,10 +39,10 @@ defmodule ExDoubleEntry.AccountTest do
       balance = Money.new(42, :USD)
 
       assert %Account{
-        identifier: :savings,
-        currency: :USD,
-        balance: ^balance,
-      } = Account.lookup!(:savings)
+               identifier: :savings,
+               currency: :USD,
+               balance: ^balance
+             } = Account.lookup!(:savings)
     end
 
     test "not found" do
@@ -53,20 +53,29 @@ defmodule ExDoubleEntry.AccountTest do
   describe "make!/2" do
     test "a" do
       assert %Account{
-        identifier: :savings, currency: :USD, scope: nil, positive_only?: true
-      } = Account.make!(:savings)
+               identifier: :savings,
+               currency: :USD,
+               scope: nil,
+               positive_only?: true
+             } = Account.make!(:savings)
     end
 
     test "b" do
       assert %Account{
-        identifier: :savings, currency: :AUD, scope: nil, positive_only?: true
-      } = Account.make!(:savings, currency: :AUD)
+               identifier: :savings,
+               currency: :AUD,
+               scope: nil,
+               positive_only?: true
+             } = Account.make!(:savings, currency: :AUD)
     end
 
     test "c" do
       assert %Account{
-        identifier: :checking, currency: :AUD, scope: "user/1", positive_only?: false
-      } = Account.make!(:checking, currency: :AUD, scope: "user/1")
+               identifier: :checking,
+               currency: :AUD,
+               scope: "user/1",
+               positive_only?: false
+             } = Account.make!(:checking, currency: :AUD, scope: "user/1")
     end
   end
 end

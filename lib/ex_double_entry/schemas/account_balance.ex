@@ -4,11 +4,11 @@ defmodule ExDoubleEntry.AccountBalance do
 
   alias ExDoubleEntry.{Repo, Account, AccountBalance}
 
-  schema "#{ExDoubleEntry.db_table_prefix}account_balances" do
-    field :identifier, ExDoubleEntry.EctoType.Identifier
-    field :currency, ExDoubleEntry.EctoType.Currency
-    field :scope, ExDoubleEntry.EctoType.Scope
-    field :balance_amount, :integer
+  schema "#{ExDoubleEntry.db_table_prefix()}account_balances" do
+    field(:identifier, ExDoubleEntry.EctoType.Identifier)
+    field(:currency, ExDoubleEntry.EctoType.Currency)
+    field(:scope, ExDoubleEntry.EctoType.Scope)
+    field(:balance_amount, :integer)
 
     timestamps()
   end
@@ -29,7 +29,7 @@ defmodule ExDoubleEntry.AccountBalance do
       identifier: identifier,
       currency: currency,
       scope: scope,
-      balance_amount: 0,
+      balance_amount: 0
     }
     |> changeset()
     |> Repo.insert!()
@@ -50,9 +50,9 @@ defmodule ExDoubleEntry.AccountBalance do
   end
 
   def for_account(
-    %Account{identifier: identifier, currency: currency, scope: scope},
-    lock: lock
-  ) do
+        %Account{identifier: identifier, currency: currency, scope: scope},
+        lock: lock
+      ) do
     from(
       ab in AccountBalance,
       where: ab.identifier == ^identifier,
@@ -66,13 +66,13 @@ defmodule ExDoubleEntry.AccountBalance do
   defp scope_cond(query, scope) do
     case scope do
       nil -> where(query, [ab], ab.scope == "")
-      _   -> where(query, [ab], ab.scope == ^scope)
+      _ -> where(query, [ab], ab.scope == ^scope)
     end
   end
 
   defp lock_cond(query, lock) do
     case lock do
-      true  -> lock(query, "FOR SHARE NOWAIT")
+      true -> lock(query, "FOR SHARE NOWAIT")
       false -> query
     end
   end
