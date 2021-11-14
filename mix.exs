@@ -9,7 +9,11 @@ defmodule ExDoubleEntry.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      name: "ExDoubleEntry",
+      description: description(),
+      package: package(),
+      source_url: "https://github.com/coinjar/ex_double_entry"
     ]
   end
 
@@ -31,7 +35,19 @@ defmodule ExDoubleEntry.MixProject do
       {:ecto_sql, "~> 3.7"},
       {:postgrex, ">= 0.0.0", optional: true},
       {:myxql, ">= 0.0.0", optional: true},
-      {:ex_machina, "~> 2.7", only: [:test, :test_mysql]}
+      {:ex_machina, "~> 2.7", only: [:test, :test_mysql]},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+    ]
+  end
+
+  defp description() do
+    "An Elixir double-entry library inspired by Ruby's DoubleEntry. Brought to you by CoinJar."
+  end
+
+  defp package() do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/coinjar/ex_double_entry"}
     ]
   end
 
