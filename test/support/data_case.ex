@@ -3,8 +3,6 @@ defmodule ExDoubleEntry.DataCase do
 
   using do
     quote do
-      alias ExDoubleEntry.Repo
-
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
@@ -14,10 +12,10 @@ defmodule ExDoubleEntry.DataCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ExDoubleEntry.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(ExDoubleEntry.repo())
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(ExDoubleEntry.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(ExDoubleEntry.repo(), {:shared, self()})
     end
 
     :ok

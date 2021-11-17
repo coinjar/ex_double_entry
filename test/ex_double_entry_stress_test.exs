@@ -2,7 +2,7 @@ defmodule ExDoubleEntryStressTest do
   use ExDoubleEntry.DataCase
   import ExDoubleEntry
   import Ecto.Query
-  alias ExDoubleEntry.{Repo, Line}
+  alias ExDoubleEntry.{Line}
 
   @processes 5
   @account_pairs_per_process 5
@@ -101,7 +101,7 @@ defmodule ExDoubleEntryStressTest do
                           order_by: [desc: l.balance_amount]
                         )
                         |> scope_cond.(scope)
-                        |> Repo.all()
+                        |> ExDoubleEntry.repo().all()
 
                       lines_b =
                         from(
@@ -112,7 +112,7 @@ defmodule ExDoubleEntryStressTest do
                           order_by: [asc: l.balance_amount]
                         )
                         |> scope_cond.(scope)
-                        |> Repo.all()
+                        |> ExDoubleEntry.repo().all()
 
                       {lines_a_amount, lines_a_balance_amount} =
                         Enum.reduce(lines_a, {0, 0}, fn line, {amount, _ba} ->
@@ -147,7 +147,7 @@ defmodule ExDoubleEntryStressTest do
 
     Task.await_many(tasks, :infinity)
 
-    assert Line |> Repo.all() |> Enum.count() ==
+    assert Line |> ExDoubleEntry.repo().all() |> Enum.count() ==
              @processes * @account_pairs_per_process * @transfers_per_account * 2
   end
 end

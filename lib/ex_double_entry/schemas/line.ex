@@ -2,7 +2,7 @@ defmodule ExDoubleEntry.Line do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ExDoubleEntry.{Repo, AccountBalance, Line}
+  alias ExDoubleEntry.{AccountBalance, Line}
 
   schema "#{ExDoubleEntry.db_table_prefix()}lines" do
     field(:account_identifier, ExDoubleEntry.EctoType.Identifier)
@@ -62,12 +62,12 @@ defmodule ExDoubleEntry.Line do
       account_balance_id: account.id
     }
     |> changeset()
-    |> Repo.insert!()
+    |> ExDoubleEntry.repo().insert!()
   end
 
   def update_partner_line_id!(%Line{} = line, partner_line_id) do
     line
     |> Ecto.Changeset.change(partner_line_id: partner_line_id)
-    |> ExDoubleEntry.Repo.update!()
+    |> ExDoubleEntry.repo().update!()
   end
 end
