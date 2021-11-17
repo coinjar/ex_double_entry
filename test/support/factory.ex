@@ -1,5 +1,5 @@
 defmodule ExDoubleEntry.Factory do
-  use ExMachina.Ecto, repo: ExDoubleEntry.Repo
+  use ExMachina.Ecto, repo: ExDoubleEntry.repo()
 
   def account_balance_factory do
     %ExDoubleEntry.AccountBalance{

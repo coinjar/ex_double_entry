@@ -2,7 +2,7 @@ defmodule ExDoubleEntry.AccountBalance do
   use Ecto.Schema
   import Ecto.{Changeset, Query}
 
-  alias ExDoubleEntry.{Repo, Account, AccountBalance}
+  alias ExDoubleEntry.{Account, AccountBalance}
 
   schema "#{ExDoubleEntry.db_table_prefix()}account_balances" do
     field(:identifier, ExDoubleEntry.EctoType.Identifier)
@@ -32,7 +32,7 @@ defmodule ExDoubleEntry.AccountBalance do
       balance_amount: 0
     }
     |> changeset()
-    |> Repo.insert!()
+    |> ExDoubleEntry.repo().insert!()
   end
 
   def for_account!(%Account{} = account) do
@@ -60,7 +60,7 @@ defmodule ExDoubleEntry.AccountBalance do
     )
     |> scope_cond(scope)
     |> lock_cond(lock)
-    |> Repo.one()
+    |> ExDoubleEntry.repo().one()
   end
 
   defp scope_cond(query, scope) do
@@ -82,7 +82,7 @@ defmodule ExDoubleEntry.AccountBalance do
   end
 
   def lock_multi!(accounts, fun) do
-    Repo.transaction(fn ->
+    ExDoubleEntry.repo().transaction(fn ->
       accounts |> Enum.sort() |> Enum.map(fn account -> lock!(account) end)
       fun.()
     end)
@@ -92,6 +92,6 @@ defmodule ExDoubleEntry.AccountBalance do
     account
     |> lock!()
     |> Ecto.Changeset.change(balance_amount: balance_amount)
-    |> Repo.update!()
+    |> ExDoubleEntry.repo().update!()
   end
 end

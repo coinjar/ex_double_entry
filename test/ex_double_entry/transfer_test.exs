@@ -1,6 +1,6 @@
 defmodule ExDoubleEntry.TransferTest do
   use ExDoubleEntry.DataCase
-  alias ExDoubleEntry.{Repo, Account, AccountBalance, Line, Transfer}
+  alias ExDoubleEntry.{Account, AccountBalance, Line, Transfer}
   doctest Transfer
 
   setup do
@@ -28,7 +28,7 @@ defmodule ExDoubleEntry.TransferTest do
         })
 
       assert {:ok, %Transfer{}} = transfer
-      assert Line |> Repo.all() |> Enum.count() == 2
+      assert Line |> ExDoubleEntry.repo().all() |> Enum.count() == 2
     end
 
     test "failure", %{acc_a: acc_a, acc_b: acc_b} do
@@ -43,7 +43,7 @@ defmodule ExDoubleEntry.TransferTest do
       assert {:error, :undefined_transfer_code, "Transfer code :give_away is undefined."} =
                transfer
 
-      assert Line |> Repo.all() |> Enum.count() == 0
+      assert Line |> ExDoubleEntry.repo().all() |> Enum.count() == 0
     end
   end
 
@@ -56,7 +56,7 @@ defmodule ExDoubleEntry.TransferTest do
       metadata: %{diamond: "hands"}
     })
 
-    [line1, line2] = Repo.all(Line)
+    [line1, line2] = ExDoubleEntry.repo().all(Line)
     [line1_id, line2_id] = [line1.id, line2.id]
     [acc_a_id, acc_b_id] = [acc_a.id, acc_b.id]
 

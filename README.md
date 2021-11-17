@@ -34,6 +34,7 @@ You will need to copy and run the [migration file](priv/repo/migrations/001_ex_d
 config :ex_double_entry,
   db: :postgres,
   db_table_prefix: "ex_double_entry_",
+  repo: YourProject.Repo,
   default_currency: :USD,
   # all accounts need to be defined here
   accounts: %{

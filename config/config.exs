@@ -4,6 +4,7 @@ config :ex_double_entry,
   ecto_repos: [ExDoubleEntry.Repo],
   db: :postgres,
   db_table_prefix: "ex_double_entry_",
+  repo: ExDoubleEntry.Repo,
   default_currency: :USD,
   accounts: %{
     bank: [],
