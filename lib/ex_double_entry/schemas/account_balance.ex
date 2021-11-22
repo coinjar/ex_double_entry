@@ -10,7 +10,7 @@ defmodule ExDoubleEntry.AccountBalance do
     field(:scope, ExDoubleEntry.EctoType.Scope)
     field(:balance_amount, :integer)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   defp changeset(params) do

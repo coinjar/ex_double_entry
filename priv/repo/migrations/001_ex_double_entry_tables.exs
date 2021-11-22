@@ -15,7 +15,7 @@ defmodule ExDoubleEntry.Repo.Migrations.ExDoubleEntryMoney do
       add :scope, :string, null: false, default: ""
       add :balance_amount, :bigint, null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime_usec)
     end
 
     create index(:"#{ExDoubleEntry.db_table_prefix}account_balances", [:scope, :currency, :identifier], unique: true, name: :scope_currency_identifier_index)
@@ -33,7 +33,7 @@ defmodule ExDoubleEntry.Repo.Migrations.ExDoubleEntryMoney do
       add :partner_line_id, references(:"#{ExDoubleEntry.db_table_prefix}lines")
       add :account_balance_id, references(:"#{ExDoubleEntry.db_table_prefix}account_balances"), null: false
 
-      timestamps()
+      timestamps(type: :utc_datetime_usec)
     end
 
     create index(:"#{ExDoubleEntry.db_table_prefix}lines", [:code, :account_identifier, :currency, :inserted_at], name: :code_account_identifier_currency_inserted_at_index)

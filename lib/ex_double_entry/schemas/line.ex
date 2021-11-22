@@ -18,7 +18,7 @@ defmodule ExDoubleEntry.Line do
     belongs_to(:partner_line, Line)
     belongs_to(:account_balance, AccountBalance)
 
-    timestamps()
+    timestamps(type: :utc_datetime_usec)
   end
 
   defp changeset(params) do
