@@ -1,6 +1,6 @@
 defmodule ExDoubleEntryTest do
   use ExDoubleEntry.DataCase
-  alias ExDoubleEntry.{Account, Line}
+  alias ExDoubleEntry.{Account, Line, MoneyProxy}
   doctest ExDoubleEntry
 
   describe "lock accounts and transfer" do
@@ -15,7 +15,7 @@ defmodule ExDoubleEntryTest do
       result =
         ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
           ExDoubleEntry.transfer!(
-            money: Money.new(100, :USD),
+            money: MoneyProxy.new(100, :USD),
             from: acc_a,
             to: acc_b,
             code: :deposit
@@ -32,7 +32,7 @@ defmodule ExDoubleEntryTest do
       assert_raise(RuntimeError, fn ->
         ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
           ExDoubleEntry.transfer!(
-            money: Money.new(100, :USD),
+            money: MoneyProxy.new(100, :USD),
             from: acc_a,
             to: acc_b,
             code: :deposit
@@ -58,7 +58,7 @@ defmodule ExDoubleEntryTest do
       result =
         ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
           ExDoubleEntry.transfer!(
-            money: Money.new(100, :USD),
+            money: MoneyProxy.new(100, :USD),
             from: acc_a,
             to: acc_b,
             code: :deposit
@@ -75,7 +75,7 @@ defmodule ExDoubleEntryTest do
       assert_raise(Account.NotFoundError, fn ->
         ExDoubleEntry.lock_accounts([acc_a, acc_b], fn ->
           ExDoubleEntry.transfer(
-            money: Money.new(100, :USD),
+            money: MoneyProxy.new(100, :USD),
             from: acc_a,
             to: acc_b,
             code: :deposit

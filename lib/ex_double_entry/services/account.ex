@@ -2,7 +2,7 @@ defmodule ExDoubleEntry.Account do
   @enforce_keys [:identifier, :currency]
   defstruct [:id, :identifier, :scope, :currency, :balance, :positive_only?]
 
-  alias ExDoubleEntry.{Account, AccountBalance}
+  alias ExDoubleEntry.{Account, AccountBalance, MoneyProxy}
 
   def present(nil), do: nil
 
@@ -13,7 +13,7 @@ defmodule ExDoubleEntry.Account do
       currency: params.currency,
       scope: params.scope,
       positive_only?: positive_only?(params.identifier),
-      balance: Money.new(params.balance_amount, params.currency)
+      balance: MoneyProxy.new(params.balance_amount, params.currency)
     }
   end
 

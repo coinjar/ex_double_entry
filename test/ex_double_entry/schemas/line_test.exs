@@ -1,6 +1,6 @@
 defmodule ExDoubleEntry.LineTest do
   use ExDoubleEntry.DataCase
-  alias ExDoubleEntry.{Account, Line}
+  alias ExDoubleEntry.{Account, Line, MoneyProxy}
   doctest Line
 
   test "insert/2" do
@@ -11,7 +11,7 @@ defmodule ExDoubleEntry.LineTest do
 
     line =
       Line.insert!(
-        Money.new(100, :USD),
+        MoneyProxy.new(100, :USD),
         account: acc_a,
         partner: acc_b,
         code: :deposit,

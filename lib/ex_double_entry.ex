@@ -34,9 +34,9 @@ defmodule ExDoubleEntry do
   ## Examples
 
   iex> %ExDoubleEntry.Transfer{
-  iex>   money: Money.new(42, :USD),
-  iex>   from: %ExDoubleEntry.Account{identifier: :checking, currency: :USD, balance: Money.new(42, :USD), positive_only?: false},
-  iex>   to: %ExDoubleEntry.Account{identifier: :savings, currency: :USD, balance: Money.new(0, :USD)},
+  iex>   money: MoneyProxy.new(42, :USD),
+  iex>   from: %ExDoubleEntry.Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(42, :USD), positive_only?: false},
+  iex>   to: %ExDoubleEntry.Account{identifier: :savings, currency: :USD, balance: MoneyProxy.new(0, :USD)},
   iex>   code: :deposit
   iex> }
   iex> |> ExDoubleEntry.transfer!()

@@ -2,7 +2,7 @@ defmodule ExDoubleEntry.Transfer do
   @enforce_keys [:money, :from, :to, :code]
   defstruct [:money, :from, :to, :code, :metadata]
 
-  alias ExDoubleEntry.{Account, AccountBalance, Guard, Line, Transfer}
+  alias ExDoubleEntry.{Account, AccountBalance, Guard, Line, MoneyProxy, Transfer}
 
   def perform!(%Transfer{} = transfer) do
     perform!(transfer, ensure_accounts: true)
@@ -43,7 +43,7 @@ defmodule ExDoubleEntry.Transfer do
 
     AccountBalance.lock_multi!([from, to], fn ->
       line1 =
-        Line.insert!(Money.neg(money),
+        Line.insert!(MoneyProxy.neg(money),
           account: from,
           partner: to,
           code: code,
@@ -61,8 +61,8 @@ defmodule ExDoubleEntry.Transfer do
       Line.update_partner_line_id!(line1, line2.id)
       Line.update_partner_line_id!(line2, line1.id)
 
-      from_amount = Money.subtract(from.balance, money).amount
-      to_amount = Money.add(to.balance, money).amount
+      from_amount = MoneyProxy.subtract(from.balance, money).amount
+      to_amount = MoneyProxy.add(to.balance, money).amount
 
       AccountBalance.update_balance!(from, from_amount)
       AccountBalance.update_balance!(to, to_amount)

@@ -4,4 +4,5 @@ Ecto.Adapters.SQL.Sandbox.mode(ExDoubleEntry.repo(), :manual)
 
 require Logger
 db = Application.fetch_env!(:ex_double_entry, :db)
-Logger.info("Running tests with #{db}...")
+money = Application.fetch_env!(:ex_double_entry, :money)
+Logger.info("Running tests with #{db} and #{money}...")

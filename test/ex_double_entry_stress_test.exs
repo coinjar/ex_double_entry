@@ -2,7 +2,7 @@ defmodule ExDoubleEntryStressTest do
   use ExDoubleEntry.DataCase
   import ExDoubleEntry
   import Ecto.Query
-  alias ExDoubleEntry.{Line}
+  alias ExDoubleEntry.{Line, MoneyProxy}
 
   @processes 5
   @account_pairs_per_process 5
@@ -69,7 +69,7 @@ defmodule ExDoubleEntryStressTest do
                     lock_accounts([acc_a, acc_b], fn ->
                       {:ok, _} =
                         transfer!(
-                          money: Money.new(amount, :USD),
+                          money: MoneyProxy.new(amount, :USD),
                           from: acc_a,
                           to: acc_b,
                           code: :stress_test

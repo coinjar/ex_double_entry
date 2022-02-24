@@ -2,17 +2,17 @@ defmodule ExDoubleEntry.Line do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ExDoubleEntry.{AccountBalance, Line}
+  alias ExDoubleEntry.{AccountBalance, EctoType, Line, MoneyProxy}
 
   schema "#{ExDoubleEntry.db_table_prefix()}lines" do
-    field(:account_identifier, ExDoubleEntry.EctoType.Identifier)
-    field(:account_scope, ExDoubleEntry.EctoType.Scope)
-    field(:currency, ExDoubleEntry.EctoType.Currency)
-    field(:amount, :integer)
-    field(:balance_amount, :integer)
-    field(:code, ExDoubleEntry.EctoType.Identifier)
-    field(:partner_identifier, ExDoubleEntry.EctoType.Identifier)
-    field(:partner_scope, ExDoubleEntry.EctoType.Scope)
+    field(:account_identifier, EctoType.Identifier)
+    field(:account_scope, EctoType.Scope)
+    field(:currency, EctoType.Currency)
+    field(:amount, EctoType.Amount)
+    field(:balance_amount, EctoType.Amount)
+    field(:code, EctoType.Identifier)
+    field(:partner_identifier, EctoType.Identifier)
+    field(:partner_scope, EctoType.Scope)
     field(:metadata, :map)
 
     belongs_to(:partner_line, Line)
@@ -55,7 +55,7 @@ defmodule ExDoubleEntry.Line do
       currency: money.currency,
       code: code,
       amount: money.amount,
-      balance_amount: Money.add(account.balance, money).amount,
+      balance_amount: MoneyProxy.add(account.balance, money).amount,
       partner_identifier: partner.identifier,
       partner_scope: partner.scope,
       metadata: metadata,

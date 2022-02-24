@@ -1,5 +1,5 @@
 defmodule ExDoubleEntry.GuardTest do
-  use ExDoubleEntry.DataCase, async: true
-  alias ExDoubleEntry.{Account, Guard, Transfer}
+  use ExDoubleEntry.DataCase
+  alias ExDoubleEntry.{Account, Guard, MoneyProxy, Transfer}
   doctest Guard
 end

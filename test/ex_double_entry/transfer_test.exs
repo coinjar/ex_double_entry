@@ -1,6 +1,6 @@
 defmodule ExDoubleEntry.TransferTest do
   use ExDoubleEntry.DataCase
-  alias ExDoubleEntry.{Account, AccountBalance, Line, Transfer}
+  alias ExDoubleEntry.{Account, AccountBalance, Line, MoneyProxy, Transfer}
   doctest Transfer
 
   setup do
@@ -21,7 +21,7 @@ defmodule ExDoubleEntry.TransferTest do
     test "successful", %{acc_a: acc_a, acc_b: acc_b} do
       transfer =
         Transfer.perform!(%Transfer{
-          money: Money.new(123_45, :USD),
+          money: MoneyProxy.new(123_45, :USD),
           from: acc_a,
           to: acc_b,
           code: :deposit
@@ -34,7 +34,7 @@ defmodule ExDoubleEntry.TransferTest do
     test "failure", %{acc_a: acc_a, acc_b: acc_b} do
       transfer =
         Transfer.perform!(%Transfer{
-          money: Money.new(123_45, :USD),
+          money: MoneyProxy.new(123_45, :USD),
           from: acc_a,
           to: acc_b,
           code: :give_away
@@ -49,7 +49,7 @@ defmodule ExDoubleEntry.TransferTest do
 
   test "perform/1", %{acc_a: acc_a, acc_b: acc_b} do
     Transfer.perform(%Transfer{
-      money: Money.new(123_45, :USD),
+      money: MoneyProxy.new(123_45, :USD),
       from: acc_a,
       to: acc_b,
       code: :deposit,
