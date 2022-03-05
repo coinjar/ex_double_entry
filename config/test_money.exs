@@ -1,7 +1,8 @@
 import Config
 
 config :ex_double_entry,
-  db: :postgres
+  db: :postgres,
+  money: :money
 
 config :ex_double_entry, ExDoubleEntry.Repo,
   username: System.get_env("POSTGRES_DB_USERNAME", "postgres"),

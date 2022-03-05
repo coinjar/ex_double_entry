@@ -1,19 +1,19 @@
 defmodule ExDoubleEntry.Guard do
-  alias ExDoubleEntry.Transfer
+  alias ExDoubleEntry.{MoneyProxy, Transfer}
 
   @doc """
   ## Examples
 
-  iex> %Transfer{money: Money.new(42, :USD), from: nil, to: nil, code: nil}
+  iex> %Transfer{money: MoneyProxy.new(42, :USD), from: nil, to: nil, code: nil}
   iex> |> Guard.positive_amount?()
-  {:ok, %Transfer{money: Money.new(42, :USD), from: nil, to: nil, code: nil}}
+  {:ok, %Transfer{money: MoneyProxy.new(42, :USD), from: nil, to: nil, code: nil}}
 
-  iex> %Transfer{money: Money.new(-42, :USD), from: nil, to: nil, code: nil}
+  iex> %Transfer{money: MoneyProxy.new(-42, :USD), from: nil, to: nil, code: nil}
   iex> |> Guard.positive_amount?()
   {:error, :positive_amount_only, ""}
   """
   def positive_amount?(%Transfer{money: money} = transfer) do
-    case Money.positive?(money) do
+    case MoneyProxy.positive?(money) do
       true -> {:ok, transfer}
       false -> {:error, :positive_amount_only, ""}
     end
@@ -78,7 +78,7 @@ defmodule ExDoubleEntry.Guard do
   ## Examples
 
   iex> %Transfer{
-  iex>   money: Money.new(42, :USD),
+  iex>   money: MoneyProxy.new(42, :USD),
   iex>   from: %Account{identifier: :checking, currency: :USD},
   iex>   to: %Account{identifier: :savings, currency: :USD},
   iex>   code: :deposit
@@ -87,7 +87,7 @@ defmodule ExDoubleEntry.Guard do
   {
     :ok,
     %Transfer{
-      money: Money.new(42, :USD),
+      money: MoneyProxy.new(42, :USD),
       code: :deposit,
       from: %Account{identifier: :checking, currency: :USD},
       to: %Account{identifier: :savings, currency: :USD},
@@ -95,7 +95,7 @@ defmodule ExDoubleEntry.Guard do
   }
 
   iex> %Transfer{
-  iex>   money: Money.new(42, :AUD),
+  iex>   money: MoneyProxy.new(42, :AUD),
   iex>   from: %Account{identifier: :checking, currency: :USD},
   iex>   to: %Account{identifier: :savings, currency: :USD},
   iex>   code: :deposit
@@ -104,7 +104,7 @@ defmodule ExDoubleEntry.Guard do
   {:error, :mismatched_currencies, "Attempted to transfer :AUD from :checking in :USD to :savings in :USD."}
 
   iex> %Transfer{
-  iex>   money: Money.new(42, :USD),
+  iex>   money: MoneyProxy.new(42, :USD),
   iex>   from: %Account{identifier: :checking, currency: :USD},
   iex>   to: %Account{identifier: :savings, currency: :AUD},
   iex>   code: :deposit
@@ -125,8 +125,8 @@ defmodule ExDoubleEntry.Guard do
   ## Examples
 
   iex> %Transfer{
-  iex>   money: Money.new(42, :USD),
-  iex>   from: %Account{identifier: :checking, currency: :USD, balance: Money.new(42, :USD), positive_only?: true},
+  iex>   money: MoneyProxy.new(42, :USD),
+  iex>   from: %Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(42, :USD), positive_only?: true},
   iex>   to: %Account{identifier: :savings, currency: :USD},
   iex>   code: :deposit
   iex> }
@@ -134,16 +134,16 @@ defmodule ExDoubleEntry.Guard do
   {
     :ok,
     %Transfer{
-      money: Money.new(42, :USD),
+      money: MoneyProxy.new(42, :USD),
       code: :deposit,
-      from: %Account{identifier: :checking, currency: :USD, balance: Money.new(42, :USD), positive_only?: true},
+      from: %Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(42, :USD), positive_only?: true},
       to: %Account{identifier: :savings, currency: :USD},
     }
   }
 
   iex> %Transfer{
-  iex>   money: Money.new(42, :USD),
-  iex>   from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD), positive_only?: false},
+  iex>   money: MoneyProxy.new(42, :USD),
+  iex>   from: %Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(10, :USD), positive_only?: false},
   iex>   to: %Account{identifier: :savings, currency: :USD},
   iex>   code: :deposit
   iex> }
@@ -151,16 +151,16 @@ defmodule ExDoubleEntry.Guard do
   {
     :ok,
     %Transfer{
-      money: Money.new(42, :USD),
+      money: MoneyProxy.new(42, :USD),
       code: :deposit,
-      from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD), positive_only?: false},
+      from: %Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(10, :USD), positive_only?: false},
       to: %Account{identifier: :savings, currency: :USD},
     }
   }
 
   iex> %Transfer{
-  iex>   money: Money.new(42, :USD),
-  iex>   from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD)},
+  iex>   money: MoneyProxy.new(42, :USD),
+  iex>   from: %Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(10, :USD)},
   iex>   to: %Account{identifier: :savings, currency: :USD},
   iex>   code: :deposit
   iex> }
@@ -168,16 +168,16 @@ defmodule ExDoubleEntry.Guard do
   {
     :ok,
     %Transfer{
-      money: Money.new(42, :USD),
+      money: MoneyProxy.new(42, :USD),
       code: :deposit,
-      from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD), positive_only?: nil},
+      from: %Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(10, :USD), positive_only?: nil},
       to: %Account{identifier: :savings, currency: :USD},
     }
   }
 
   iex> %Transfer{
-  iex>   money: Money.new(42, :USD),
-  iex>   from: %Account{identifier: :checking, currency: :USD, balance: Money.new(10, :USD), positive_only?: true},
+  iex>   money: MoneyProxy.new(42, :USD),
+  iex>   from: %Account{identifier: :checking, currency: :USD, balance: MoneyProxy.new(10, :USD), positive_only?: true},
   iex>   to: %Account{identifier: :savings, currency: :USD},
   iex>   code: :deposit
   iex> }
@@ -185,7 +185,7 @@ defmodule ExDoubleEntry.Guard do
   {:error, :insufficient_balance, "Transfer amount: 42, :checking balance amount: 10"}
   """
   def positive_balance_if_enforced?(%Transfer{money: money, from: from} = transfer) do
-    if !!from.positive_only? and Money.cmp(from.balance, money) == :lt do
+    if !!from.positive_only? and MoneyProxy.cmp(from.balance, money) == :lt do
       {:error, :insufficient_balance,
        "Transfer amount: #{money.amount}, :#{from.identifier} balance amount: #{from.balance.amount}"}
     else

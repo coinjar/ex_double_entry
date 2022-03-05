@@ -6,24 +6,46 @@ jobs:
     strategy:
       matrix:
         include:
-          - elixir: 1.12.3
-            otp: 24.0
-            env: test
-          - elixir: 1.12.3
-            otp: 24.0
-            env: test_mysql
-          - elixir: 1.12.3
+
+          - elixir: 1.13.3
+            otp: 24.2
+            env: test_money
+          - elixir: 1.13.3
+            otp: 24.2
+            env: test_mysql_money
+          - elixir: 1.13.3
+            otp: 24.2
+            env: test_ex_money
+          - elixir: 1.13.3
+            otp: 24.2
+            env: test_mysql_ex_money
+
+          - elixir: 1.13.3
             otp: 23.3
-            env: test
-          - elixir: 1.12.3
+            env: test_money
+          - elixir: 1.13.3
             otp: 23.3
-            env: test_mysql
-          - elixir: 1.12.3
+            env: test_mysql_money
+          - elixir: 1.13.3
+            otp: 23.3
+            env: test_ex_money
+          - elixir: 1.13.3
+            otp: 23.3
+            env: test_mysql_ex_money
+
+          - elixir: 1.13.3
             otp: 22.3
-            env: test
-          - elixir: 1.12.3
+            env: test_money
+          - elixir: 1.13.3
             otp: 22.3
-            env: test_mysql
+            env: test_mysql_money
+          - elixir: 1.13.3
+            otp: 22.3
+            env: test_ex_money
+          - elixir: 1.13.3
+            otp: 22.3
+            env: test_mysql_ex_money
+
     services:
       postgres:
         image: postgres
@@ -51,7 +73,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Elixir
-      uses: erlef/setup-elixir@885971a72ed1f9240973bd92ab57af8c1aa68f24
+      uses: erlef/setup-beam@v1
       with:
         elixir-version: ${{ matrix.elixir }}
         otp-version: ${{ matrix.otp }}

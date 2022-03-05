@@ -1,7 +1,8 @@
 import Config
 
 config :ex_double_entry,
-  db: :mysql
+  db: :mysql,
+  money: :money
 
 config :ex_double_entry, ExDoubleEntry.Repo,
   username: System.get_env("MYSQL_DB_USERNAME", "root"),

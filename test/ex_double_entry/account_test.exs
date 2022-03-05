@@ -1,10 +1,10 @@
 defmodule ExDoubleEntry.AccountTest do
   use ExDoubleEntry.DataCase
-  alias ExDoubleEntry.Account
+  alias ExDoubleEntry.{Account, MoneyProxy}
   doctest Account
 
   test "present/1" do
-    balance = Money.new(42, :USD)
+    balance = MoneyProxy.new(42, :USD)
 
     account =
       :account_balance
@@ -24,7 +24,7 @@ defmodule ExDoubleEntry.AccountTest do
     test "found" do
       insert(:account_balance, identifier: :savings, currency: :USD, balance_amount: 42)
 
-      balance = Money.new(42, :USD)
+      balance = MoneyProxy.new(42, :USD)
 
       assert %Account{
                identifier: :savings,
@@ -36,7 +36,7 @@ defmodule ExDoubleEntry.AccountTest do
     test "with default currency" do
       insert(:account_balance, identifier: :savings, currency: :USD, balance_amount: 42)
 
-      balance = Money.new(42, :USD)
+      balance = MoneyProxy.new(42, :USD)
 
       assert %Account{
                identifier: :savings,

@@ -1,6 +1,6 @@
 defmodule ExDoubleEntry.AccountBalanceTest do
   use ExDoubleEntry.DataCase
-  alias ExDoubleEntry.{Account, AccountBalance, Transfer}
+  alias ExDoubleEntry.{Account, AccountBalance, MoneyProxy, Transfer}
   doctest AccountBalance
 
   test "create!/1 - balance will always be 0" do
@@ -8,7 +8,7 @@ defmodule ExDoubleEntry.AccountBalanceTest do
       identifier: :savings,
       scope: "user/1",
       currency: :USD,
-      balance: Money.new(42, :USD)
+      balance: MoneyProxy.new(42, :USD)
     }
 
     assert %AccountBalance{balance_amount: 0} = AccountBalance.create!(account)
@@ -137,7 +137,7 @@ defmodule ExDoubleEntry.AccountBalanceTest do
           assert_raise(DBConnection.ConnectionError, fn ->
             AccountBalance.lock_multi!([acc_a, acc_b], fn ->
               Transfer.perform(%Transfer{
-                money: Money.new(42, :USD),
+                money: MoneyProxy.new(42, :USD),
                 from: acc_a,
                 to: acc_b,
                 code: :deposit,

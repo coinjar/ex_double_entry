@@ -2,13 +2,13 @@ defmodule ExDoubleEntry.AccountBalance do
   use Ecto.Schema
   import Ecto.{Changeset, Query}
 
-  alias ExDoubleEntry.{Account, AccountBalance}
+  alias ExDoubleEntry.{Account, AccountBalance, EctoType}
 
   schema "#{ExDoubleEntry.db_table_prefix()}account_balances" do
-    field(:identifier, ExDoubleEntry.EctoType.Identifier)
-    field(:currency, ExDoubleEntry.EctoType.Currency)
-    field(:scope, ExDoubleEntry.EctoType.Scope)
-    field(:balance_amount, :integer)
+    field(:identifier, EctoType.Identifier)
+    field(:currency, EctoType.Currency)
+    field(:scope, EctoType.Scope)
+    field(:balance_amount, EctoType.Amount)
 
     timestamps(type: :utc_datetime_usec)
   end

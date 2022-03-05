@@ -10,7 +10,7 @@ if Code.ensure_loaded?(Ecto.Type) do
 
     def cast(val)
 
-    def cast(%Money{currency: currency}), do: {:ok, currency}
+    def cast(%{currency: currency}), do: {:ok, currency}
 
     def cast(atom) when is_atom(atom), do: {:ok, atom}
 
