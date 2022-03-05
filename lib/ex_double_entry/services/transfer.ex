@@ -1,4 +1,6 @@
 defmodule ExDoubleEntry.Transfer do
+  @type t() :: %__MODULE__{}
+
   @enforce_keys [:money, :from, :to, :code]
   defstruct [:money, :from, :to, :code, :metadata]
 

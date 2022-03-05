@@ -40,7 +40,8 @@ defmodule ExDoubleEntry.MixProject do
       {:myxql, ">= 0.0.0", optional: true},
       {:ex_machina, "~> 2.7",
        only: [:test_money, :test_mysql_money, :test_ex_money, :test_mysql_ex_money]},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:dialyxir, ">= 0.0.0", only: [:dev], runtime: false}
     ]
   end
 

@@ -1,4 +1,6 @@
 defmodule ExDoubleEntry.Account do
+  @type t() :: %__MODULE__{}
+
   @enforce_keys [:identifier, :currency]
   defstruct [:id, :identifier, :scope, :currency, :balance, :positive_only?]
 
